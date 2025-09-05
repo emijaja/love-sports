@@ -291,5 +291,3 @@ packages/
 * 管理者の監視ダッシュボード（欠測率、センサー品質、端末バッテリ）
 
 ---
-
-必要ならこのまま **Drizzle の初期スキーマ**と**Edge Function 雛形**まで起こします。どこから着手しましょう？（例：`profiles`/`events`/`device_assignments` の3テーブル＆ `/admin/events` の作成API から）
