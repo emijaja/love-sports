@@ -49,7 +49,7 @@ pnpm install
 cd apps/web
 
 # Next.js プロジェクト作成（現在のディレクトリに）
-npx create-next-app@14 . --typescript --tailwind --app --src-dir --import-alias "@/*"
+npx create-next-app@15 . --typescript --tailwind --app --src-dir --import-alias "@/*"
 
 # 必要パッケージインストール
 pnpm install @supabase/supabase-js @supabase/ssr @supabase/auth-ui-react @supabase/auth-ui-shared

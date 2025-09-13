@@ -99,7 +99,7 @@
 
 ## 7. 技術スタック / アーキテクチャ（確定・更新）
 
-* **フロントエンド**：Next.js 14（App Router, TypeScript, RSC, Tailwind, shadcn/ui, react-hook-form + zod）
+* **フロントエンド**：Next.js 15（App Router, TypeScript, RSC, Tailwind, shadcn/ui, react-hook-form + zod）
 * **認証**：**Supabase Auth（Email + Password）**
 
   * 参加者／管理者ともメールアドレスでログイン

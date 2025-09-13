@@ -10,7 +10,7 @@
 
 ## 技術スタック
 
-- **フロントエンド**: Next.js 14 (App Router, TypeScript, Tailwind CSS, shadcn/ui)
+- **フロントエンド**: Next.js 15 (App Router, TypeScript, Tailwind CSS, shadcn/ui)
 - **認証**: Supabase Auth (Email + Password)
 - **API**: Supabase Edge Functions (TypeScript)
 - **データベース**: Supabase Postgres with Drizzle ORM
@@ -23,7 +23,7 @@
 ```
 love-sports/
 ├── apps/
-│   ├── web/              # Next.js フロントエンドアプリ
+│   ├── web/              # Next.js 15 フロントエンドアプリ
 │   └── functions/        # Supabase Edge Functions
 ├── packages/
 │   └── db/              # データベーススキーマ (Drizzle)
