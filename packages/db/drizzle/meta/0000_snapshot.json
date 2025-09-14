@@ -1,5 +1,5 @@
 {
-  "id": "1af436e3-f2d0-4e77-ad85-93ba05605625",
+  "id": "07098eb2-c1b3-4cf5-9606-3923b04a02b3",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -192,12 +192,6 @@
           "primaryKey": true,
           "notNull": true
         },
-        "role": {
-          "name": "role",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
         "nickname": {
           "name": "nickname",
           "type": "text",
@@ -224,6 +218,13 @@
         },
         "created_at": {
           "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
