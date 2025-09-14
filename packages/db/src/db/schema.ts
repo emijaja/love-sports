@@ -1,15 +1,19 @@
 // packages/db/src/schema.ts
-import { pgTable, uuid, text, timestamp, integer, jsonb, index, unique } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, text, timestamp, integer, jsonb, index, unique, check } from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
 
 export const profiles = pgTable('profiles', {
-  id: uuid('id').primaryKey(),
-  role: text('role').notNull(), // 'participant' | 'admin'
+  id: uuid('id').primaryKey(), // References auth.users(id)
   nickname: text('nickname'),
   gender: text('gender'),
   imageUrl: text('image_url'),
   bio: text('bio'),
+  role: text('role').default('user'),
   createdAt: timestamp('created_at').defaultNow(),
-});
+  updatedAt: timestamp('updated_at').defaultNow(),
+}, (table) => ({
+  validRole: check('valid_role', sql`role IN ('admin', 'user')`),
+}));
 
 export const events = pgTable('events', {
   id: uuid('id').primaryKey().defaultRandom(),

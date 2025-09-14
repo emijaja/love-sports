@@ -24,12 +24,12 @@ CREATE TABLE "events" (
 --> statement-breakpoint
 CREATE TABLE "profiles" (
 	"id" uuid PRIMARY KEY NOT NULL,
-	"role" text NOT NULL,
 	"nickname" text,
 	"gender" text,
 	"image_url" text,
 	"bio" text,
-	"created_at" timestamp DEFAULT now()
+	"created_at" timestamp DEFAULT now(),
+	"updated_at" timestamp DEFAULT now()
 );
 --> statement-breakpoint
 CREATE TABLE "results_final" (

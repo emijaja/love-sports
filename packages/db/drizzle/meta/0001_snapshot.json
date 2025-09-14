@@ -1,6 +1,6 @@
 {
-  "id": "d9061c85-6c82-4ac4-bddc-34047fdd886e",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "862bdd37-f3e0-40c0-a6bb-2d4ae2c36621",
+  "prevId": "07098eb2-c1b3-4cf5-9606-3923b04a02b3",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -192,12 +192,6 @@
           "primaryKey": true,
           "notNull": true
         },
-        "role": {
-          "name": "role",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
         "nickname": {
           "name": "nickname",
           "type": "text",
@@ -222,8 +216,22 @@
           "primaryKey": false,
           "notNull": false
         },
+        "role": {
+          "name": "role",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'user'"
+        },
         "created_at": {
           "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
@@ -235,7 +243,12 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
-      "checkConstraints": {},
+      "checkConstraints": {
+        "valid_role": {
+          "name": "valid_role",
+          "value": "role IN ('admin', 'user')"
+        }
+      },
       "isRLSEnabled": false
     },
     "public.results_final": {
