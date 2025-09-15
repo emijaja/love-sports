@@ -1,6 +1,7 @@
 'use client'
 
 import { Calendar, Clock, Trophy, BarChart, Loader } from 'lucide-react'
+import Link from 'next/link'
 
 interface Event {
   id: string
@@ -55,7 +56,7 @@ export default function EventStatusContent({ event }: EventStatusContentProps) {
           </div>
         )
 
-      case 'interval':
+      case 'intervel':
         return (
           <div className="py-6">
             <div className="text-center mb-6">
@@ -128,7 +129,7 @@ export default function EventStatusContent({ event }: EventStatusContentProps) {
               ? 'bg-yellow-100 text-yellow-800'
               : event.status === 'active'
               ? 'bg-green-100 text-green-800'
-              : event.status === 'interval'
+              : event.status === 'intervel'
               ? 'bg-blue-100 text-blue-800'
               : event.status === 'ended'
               ? 'bg-gray-100 text-gray-800'
@@ -139,7 +140,7 @@ export default function EventStatusContent({ event }: EventStatusContentProps) {
             ? '準備中'
             : event.status === 'active'
             ? '開催中'
-            : event.status === 'interval'
+            : event.status === 'intervel'
             ? 'インターバル'
             : event.status === 'ended'
             ? '終了'
@@ -171,21 +172,21 @@ function InterimResults({ eventId, showFinalProcessing = false }: {
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-pink-50 border border-pink-200 rounded-lg p-4">
-          <h4 className="font-medium text-pink-900 mb-2">💓 ドキドキ度</h4>
-          <div className="text-2xl font-bold text-pink-600">-</div>
-          <p className="text-xs text-pink-700 mt-1">計算中...</p>
+          <h4 className="font-medium text-pink-900 mb-2">💕 ドキドキ相手</h4>
+          <div className="text-lg font-bold text-pink-600 mb-1">田中さん</div>
+          <p className="text-xs text-pink-700">現在1位</p>
+        </div>
+        
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+          <h4 className="font-medium text-red-900 mb-2">💓 最大心拍数の時</h4>
+          <div className="text-lg font-bold text-red-600 mb-1">鈴木さん</div>
+          <p className="text-xs text-red-700">180bpm時</p>
         </div>
         
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <h4 className="font-medium text-blue-900 mb-2">👥 接近度</h4>
-          <div className="text-2xl font-bold text-blue-600">-</div>
-          <p className="text-xs text-blue-700 mt-1">計算中...</p>
-        </div>
-        
-        <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-          <h4 className="font-medium text-purple-900 mb-2">⚡ 活動量</h4>
-          <div className="text-2xl font-bold text-purple-600">-</div>
-          <p className="text-xs text-purple-700 mt-1">計算中...</p>
+          <h4 className="font-medium text-blue-900 mb-2">👫 最も近くにいた人</h4>
+          <div className="text-lg font-bold text-blue-600 mb-1">高橋さん</div>
+          <p className="text-xs text-blue-700">平均2.3m</p>
         </div>
       </div>
       
@@ -201,32 +202,41 @@ function FinalResults({ eventId }: { eventId: string }) {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-gradient-to-br from-pink-50 to-pink-100 border border-pink-200 rounded-lg p-6">
+        <Link
+          href={`/results/${eventId}/excitement`}
+          className="bg-gradient-to-br from-pink-50 to-pink-100 border border-pink-200 rounded-lg p-6 hover:from-pink-100 hover:to-pink-200 transition-colors"
+        >
           <div className="text-center">
             <div className="text-3xl mb-2">💕</div>
-            <h4 className="font-medium text-pink-900 mb-3">最高のドキドキ相手</h4>
+            <h4 className="font-medium text-pink-900 mb-3">ドキドキ相手</h4>
             <div className="text-lg font-bold text-pink-600 mb-2">田中さん</div>
-            <p className="text-sm text-pink-700">心拍数ピーク時に最も近くにいました</p>
+            <p className="text-sm text-pink-700">誰と近くにいる時に一番ドキドキしたか</p>
           </div>
-        </div>
+        </Link>
         
-        <div className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-6">
+        <Link
+          href={`/results/${eventId}/heartrate-peak`}
+          className="bg-gradient-to-br from-red-50 to-red-100 border border-red-200 rounded-lg p-6 hover:from-red-100 hover:to-red-200 transition-colors"
+        >
+          <div className="text-center">
+            <div className="text-3xl mb-2">💓</div>
+            <h4 className="font-medium text-red-900 mb-3">最大心拍数の時</h4>
+            <div className="text-lg font-bold text-red-600 mb-2">鈴木さん</div>
+            <p className="text-sm text-red-700">最大心拍数のとき、誰が近くにいたか</p>
+          </div>
+        </Link>
+        
+        <Link
+          href={`/results/${eventId}/proximity`}
+          className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-6 hover:from-blue-100 hover:to-blue-200 transition-colors"
+        >
           <div className="text-center">
             <div className="text-3xl mb-2">👫</div>
             <h4 className="font-medium text-blue-900 mb-3">最も近くにいた人</h4>
-            <div className="text-lg font-bold text-blue-600 mb-2">佐藤さん</div>
-            <p className="text-sm text-blue-700">平均距離: 2.5m</p>
+            <div className="text-lg font-bold text-blue-600 mb-2">高橋さん</div>
+            <p className="text-sm text-blue-700">もっとも近くにいた人</p>
           </div>
-        </div>
-        
-        <div className="bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 rounded-lg p-6">
-          <div className="text-center">
-            <div className="text-3xl mb-2">⚡</div>
-            <h4 className="font-medium text-purple-900 mb-3">活動パートナー</h4>
-            <div className="text-lg font-bold text-purple-600 mb-2">山田さん</div>
-            <p className="text-sm text-purple-700">同じタイミングで活動レベルが上昇</p>
-          </div>
-        </div>
+        </Link>
       </div>
       
       <div className="bg-gradient-to-r from-pink-500 to-purple-600 rounded-lg p-6 text-white text-center">
