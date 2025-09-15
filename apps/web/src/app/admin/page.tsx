@@ -33,10 +33,10 @@ export default async function AdminPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="bg-blue-50 p-4 rounded-lg">
+            <a href="/admin/events" className="bg-blue-50 p-4 rounded-lg hover:bg-blue-100 transition-colors">
               <h3 className="font-semibold text-blue-900 mb-2">イベント管理</h3>
               <p className="text-sm text-blue-700">スポーツイベントの作成・編集・管理</p>
-            </div>
+            </a>
             
             <div className="bg-green-50 p-4 rounded-lg">
               <h3 className="font-semibold text-green-900 mb-2">ユーザー管理</h3>
