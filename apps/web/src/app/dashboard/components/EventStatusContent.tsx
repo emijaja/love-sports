@@ -1,0 +1,240 @@
+'use client'
+
+import { Calendar, Clock, Trophy, BarChart, Loader } from 'lucide-react'
+
+interface Event {
+  id: string
+  name: string
+  status: string
+  starts_at_ms: number
+  ends_at_ms: number
+}
+
+interface EventStatusContentProps {
+  event: Event
+}
+
+export default function EventStatusContent({ event }: EventStatusContentProps) {
+  const renderContent = () => {
+    switch (event.status) {
+      case 'preparing':
+        return (
+          <div className="text-center py-8">
+            <Clock className="h-12 w-12 text-yellow-500 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              イベントは準備中です
+            </h3>
+            <p className="text-gray-600 mb-4">
+              まもなく開始予定です。お待ちください。
+            </p>
+            <div className="text-sm text-gray-500">
+              開始予定: {new Date(event.starts_at_ms).toLocaleString('ja-JP')}
+            </div>
+          </div>
+        )
+
+      case 'active':
+        return (
+          <div className="text-center py-8">
+            <div className="relative">
+              <div className="h-12 w-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
+                <div className="h-3 w-3 bg-green-500 rounded-full"></div>
+              </div>
+            </div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              イベント中です
+            </h3>
+            <p className="text-gray-600 mb-4">
+              現在イベントが進行中です。楽しんでください！
+            </p>
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+              <p className="text-sm text-green-800">
+                💓 心拍数と距離データを計測中...
+              </p>
+            </div>
+          </div>
+        )
+
+      case 'interval':
+        return (
+          <div className="py-6">
+            <div className="text-center mb-6">
+              <BarChart className="h-12 w-12 text-blue-500 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                インターバル中
+              </h3>
+              <p className="text-gray-600">
+                休憩時間です。途中結果をご確認ください。
+              </p>
+            </div>
+            <InterimResults eventId={event.id} />
+          </div>
+        )
+
+      case 'ended':
+        return (
+          <div className="py-6">
+            <div className="text-center mb-6">
+              <Loader className="h-12 w-12 text-gray-500 mx-auto mb-4 animate-spin" />
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                最終結果を集計中です
+              </h3>
+              <p className="text-gray-600 mb-4">
+                イベントは終了しました。最終結果の準備をしています。
+              </p>
+            </div>
+            <InterimResults eventId={event.id} showFinalProcessing />
+          </div>
+        )
+
+      case 'published':
+        return (
+          <div className="py-6">
+            <div className="text-center mb-6">
+              <Trophy className="h-12 w-12 text-purple-500 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                最終結果発表
+              </h3>
+              <p className="text-gray-600">
+                お疲れ様でした！最終結果をご確認ください。
+              </p>
+            </div>
+            <FinalResults eventId={event.id} />
+          </div>
+        )
+
+      default:
+        return (
+          <div className="text-center py-8">
+            <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              {event.name}
+            </h3>
+            <p className="text-gray-600">
+              ステータス: {event.status}
+            </p>
+          </div>
+        )
+    }
+  }
+
+  return (
+    <div className="bg-white rounded-lg shadow p-6">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-xl font-medium text-gray-900">{event.name}</h2>
+        <span
+          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+            event.status === 'preparing'
+              ? 'bg-yellow-100 text-yellow-800'
+              : event.status === 'active'
+              ? 'bg-green-100 text-green-800'
+              : event.status === 'interval'
+              ? 'bg-blue-100 text-blue-800'
+              : event.status === 'ended'
+              ? 'bg-gray-100 text-gray-800'
+              : 'bg-purple-100 text-purple-800'
+          }`}
+        >
+          {event.status === 'preparing'
+            ? '準備中'
+            : event.status === 'active'
+            ? '開催中'
+            : event.status === 'interval'
+            ? 'インターバル'
+            : event.status === 'ended'
+            ? '終了'
+            : '結果公開中'}
+        </span>
+      </div>
+      {renderContent()}
+    </div>
+  )
+}
+
+// 途中結果表示コンポーネント
+function InterimResults({ eventId, showFinalProcessing = false }: { 
+  eventId: string
+  showFinalProcessing?: boolean 
+}) {
+  return (
+    <div className="space-y-4">
+      {showFinalProcessing && (
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
+          <div className="flex items-center">
+            <Loader className="h-4 w-4 text-yellow-600 animate-spin mr-2" />
+            <p className="text-sm text-yellow-800">
+              最終結果を集計中です...
+            </p>
+          </div>
+        </div>
+      )}
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-pink-50 border border-pink-200 rounded-lg p-4">
+          <h4 className="font-medium text-pink-900 mb-2">💓 ドキドキ度</h4>
+          <div className="text-2xl font-bold text-pink-600">-</div>
+          <p className="text-xs text-pink-700 mt-1">計算中...</p>
+        </div>
+        
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <h4 className="font-medium text-blue-900 mb-2">👥 接近度</h4>
+          <div className="text-2xl font-bold text-blue-600">-</div>
+          <p className="text-xs text-blue-700 mt-1">計算中...</p>
+        </div>
+        
+        <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+          <h4 className="font-medium text-purple-900 mb-2">⚡ 活動量</h4>
+          <div className="text-2xl font-bold text-purple-600">-</div>
+          <p className="text-xs text-purple-700 mt-1">計算中...</p>
+        </div>
+      </div>
+      
+      <div className="text-center text-sm text-gray-500 mt-4">
+        {showFinalProcessing ? '最終結果の準備ができ次第、詳細な結果をお届けします' : 'イベント後に詳細な結果をお届けします'}
+      </div>
+    </div>
+  )
+}
+
+// 最終結果表示コンポーネント
+function FinalResults({ eventId }: { eventId: string }) {
+  return (
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-gradient-to-br from-pink-50 to-pink-100 border border-pink-200 rounded-lg p-6">
+          <div className="text-center">
+            <div className="text-3xl mb-2">💕</div>
+            <h4 className="font-medium text-pink-900 mb-3">最高のドキドキ相手</h4>
+            <div className="text-lg font-bold text-pink-600 mb-2">田中さん</div>
+            <p className="text-sm text-pink-700">心拍数ピーク時に最も近くにいました</p>
+          </div>
+        </div>
+        
+        <div className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-6">
+          <div className="text-center">
+            <div className="text-3xl mb-2">👫</div>
+            <h4 className="font-medium text-blue-900 mb-3">最も近くにいた人</h4>
+            <div className="text-lg font-bold text-blue-600 mb-2">佐藤さん</div>
+            <p className="text-sm text-blue-700">平均距離: 2.5m</p>
+          </div>
+        </div>
+        
+        <div className="bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 rounded-lg p-6">
+          <div className="text-center">
+            <div className="text-3xl mb-2">⚡</div>
+            <h4 className="font-medium text-purple-900 mb-3">活動パートナー</h4>
+            <div className="text-lg font-bold text-purple-600 mb-2">山田さん</div>
+            <p className="text-sm text-purple-700">同じタイミングで活動レベルが上昇</p>
+          </div>
+        </div>
+      </div>
+      
+      <div className="bg-gradient-to-r from-pink-500 to-purple-600 rounded-lg p-6 text-white text-center">
+        <h3 className="text-xl font-bold mb-2">🎉 マッチング完了！</h3>
+        <p className="text-pink-100">
+          スポーツを通じて素敵な出会いが見つかりました
+        </p>
+      </div>
+    </div>
+  )
+}
