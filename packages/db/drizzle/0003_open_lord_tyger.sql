@@ -1,0 +1,1 @@
+ALTER TABLE "profiles" DROP CONSTRAINT "valid_role";
