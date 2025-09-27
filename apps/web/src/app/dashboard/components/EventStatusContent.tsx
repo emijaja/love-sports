@@ -173,20 +173,14 @@ function InterimResults({ eventId: _eventId, showFinalProcessing = false }: {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-pink-50 border border-pink-200 rounded-lg p-4">
           <h4 className="font-medium text-pink-900 mb-2">💕 ドキドキ相手</h4>
-          <div className="text-lg font-bold text-pink-600 mb-1">田中さん</div>
-          <p className="text-xs text-pink-700">現在1位</p>
         </div>
         
         <div className="bg-red-50 border border-red-200 rounded-lg p-4">
           <h4 className="font-medium text-red-900 mb-2">💓 最大心拍数の時</h4>
-          <div className="text-lg font-bold text-red-600 mb-1">鈴木さん</div>
-          <p className="text-xs text-red-700">180bpm時</p>
         </div>
         
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
           <h4 className="font-medium text-blue-900 mb-2">👫 最も近くにいた人</h4>
-          <div className="text-lg font-bold text-blue-600 mb-1">高橋さん</div>
-          <p className="text-xs text-blue-700">平均2.3m</p>
         </div>
       </div>
       
@@ -209,7 +203,6 @@ function FinalResults({ eventId }: { eventId: string }) {
           <div className="text-center">
             <div className="text-3xl mb-2">💕</div>
             <h4 className="font-medium text-pink-900 mb-3">ドキドキ相手</h4>
-            <div className="text-lg font-bold text-pink-600 mb-2">田中さん</div>
             <p className="text-sm text-pink-700">誰と近くにいる時に一番ドキドキしたか</p>
           </div>
         </Link>
@@ -221,7 +214,6 @@ function FinalResults({ eventId }: { eventId: string }) {
           <div className="text-center">
             <div className="text-3xl mb-2">💓</div>
             <h4 className="font-medium text-red-900 mb-3">最大心拍数の時</h4>
-            <div className="text-lg font-bold text-red-600 mb-2">鈴木さん</div>
             <p className="text-sm text-red-700">最大心拍数のとき、誰が近くにいたか</p>
           </div>
         </Link>
@@ -233,7 +225,6 @@ function FinalResults({ eventId }: { eventId: string }) {
           <div className="text-center">
             <div className="text-3xl mb-2">👫</div>
             <h4 className="font-medium text-blue-900 mb-3">最も近くにいた人</h4>
-            <div className="text-lg font-bold text-blue-600 mb-2">高橋さん</div>
             <p className="text-sm text-blue-700">もっとも近くにいた人</p>
           </div>
         </Link>
