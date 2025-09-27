@@ -153,7 +153,7 @@ export default function EventStatusContent({ event }: EventStatusContentProps) {
 }
 
 // 途中結果表示コンポーネント
-function InterimResults({ eventId, showFinalProcessing = false }: { 
+function InterimResults({ eventId: _eventId, showFinalProcessing = false }: { 
   eventId: string
   showFinalProcessing?: boolean 
 }) {

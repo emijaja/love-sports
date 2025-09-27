@@ -1,7 +1,7 @@
 import { createServerSupabaseClient } from '@/lib/supabase'
 import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Activity, Clock, Heart, Zap, Trophy, Star, Sparkles, Target, Flame, TrendingUp, Award, Crown, Gift, Music, Camera, Gamepad2, PartyPopper, Wifi, Battery, WifiOff, Rocket, Lightning, Shield, Sword } from 'lucide-react'
+import { ArrowLeft, Activity, Clock, Heart, Trophy, Star, Sparkles, Target, Flame, Award, Crown } from 'lucide-react'
 
 interface HeartRatePeakResultPageProps {
   params: Promise<{ id: string }>

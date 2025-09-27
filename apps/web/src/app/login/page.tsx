@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { LogIn, User, Lock, Heart } from 'lucide-react';
 import { useState } from 'react';
+import Link from 'next/link';
 import { userLogin } from './actions';
 
 const loginSchema = z.object({
@@ -134,12 +135,12 @@ export default function LoginPage() {
         </form>
 
         <div className="text-center space-y-2">
-          <a
+          <Link
             href="/"
             className="text-sm text-pink-600 hover:text-pink-500 hover:underline"
           >
             トップページに戻る
-          </a>
+          </Link>
           <div className="text-xs text-gray-500">
             管理者の方は{' '}
             <a href="/admin/login" className="text-blue-600 hover:underline">

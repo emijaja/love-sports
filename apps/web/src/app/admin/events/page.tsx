@@ -1,7 +1,7 @@
 import { createServerSupabaseClient } from '@/lib/supabase'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { Plus, Calendar, Users, Settings } from 'lucide-react'
+import { Plus, Calendar } from 'lucide-react'
 import EventStatusBadge from './components/EventStatusBadge'
 import EventActions from './components/EventActions'
 

@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Heart, TrendingUp } from 'lucide-react'
 
 export function ExcitementDetails() {
   const [isVisible, setIsVisible] = useState(false)

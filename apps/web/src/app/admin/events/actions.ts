@@ -63,7 +63,7 @@ export async function createEvent(formData: {
   }
 
   // イベント作成
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from('events')
     .insert({
       name: formData.name,
