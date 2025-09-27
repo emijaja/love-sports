@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, User, Crown, Shield } from 'lucide-react'
 import { updateUserRole } from './actions'
+import CreateUserForm from './create-user-form'
 
 export default async function AdminUsersPage() {
   const supabase = await createServerSupabaseClient()
@@ -48,9 +49,12 @@ export default async function AdminUsersPage() {
           </Link>
           
           <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center mb-6">
-              <User className="h-6 w-6 text-green-600 mr-3" />
-              <h1 className="text-2xl font-bold text-gray-900">ユーザー管理</h1>
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center">
+                <User className="h-6 w-6 text-green-600 mr-3" />
+                <h1 className="text-2xl font-bold text-gray-900">ユーザー管理</h1>
+              </div>
+              <CreateUserForm />
             </div>
             
             {/* 統計 */}
