@@ -914,3 +914,233 @@
     }
   }
 }
+
+/* ハート爆発アニメーション */
+@keyframes heart-explosion-1 {
+  0% {
+    transform: translate(0, 0) scale(0) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(-500px, -400px) scale(1.5) rotate(180deg);
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate(-1000px, -800px) scale(1.2) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+@keyframes heart-explosion-2 {
+  0% {
+    transform: translate(0, 0) scale(0) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(500px, -400px) scale(1.5) rotate(-180deg);
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate(1000px, -800px) scale(1.2) rotate(-360deg);
+    opacity: 0;
+  }
+}
+
+@keyframes heart-explosion-3 {
+  0% {
+    transform: translate(0, 0) scale(0) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(-400px, 500px) scale(1.5) rotate(90deg);
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate(-800px, 1000px) scale(1.2) rotate(180deg);
+    opacity: 0;
+  }
+}
+
+@keyframes heart-explosion-4 {
+  0% {
+    transform: translate(0, 0) scale(0) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(400px, 500px) scale(1.5) rotate(-90deg);
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate(800px, 1000px) scale(1.2) rotate(-180deg);
+    opacity: 0;
+  }
+}
+
+@keyframes heart-explosion-5 {
+  0% {
+    transform: translate(0, 0) scale(0) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(-700px, 0px) scale(1.5) rotate(45deg);
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate(-1400px, 0px) scale(1.2) rotate(90deg);
+    opacity: 0;
+  }
+}
+
+@keyframes heart-explosion-6 {
+  0% {
+    transform: translate(0, 0) scale(0) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(700px, 0px) scale(1.5) rotate(-45deg);
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate(1400px, 0px) scale(1.2) rotate(-90deg);
+    opacity: 0;
+  }
+}
+
+@keyframes heart-explosion-7 {
+  0% {
+    transform: translate(0, 0) scale(0) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(0px, -700px) scale(1.5) rotate(135deg);
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate(0px, -1400px) scale(1.2) rotate(270deg);
+    opacity: 0;
+  }
+}
+
+@keyframes heart-explosion-8 {
+  0% {
+    transform: translate(0, 0) scale(0) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(0px, 700px) scale(1.5) rotate(-135deg);
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate(0px, 1400px) scale(1.2) rotate(-270deg);
+    opacity: 0;
+  }
+}
+
+@keyframes heart-explosion-9 {
+  0% {
+    transform: translate(0, 0) scale(0) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(-600px, -250px) scale(1.5) rotate(225deg);
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate(-1200px, -500px) scale(1.2) rotate(450deg);
+    opacity: 0;
+  }
+}
+
+@keyframes heart-explosion-10 {
+  0% {
+    transform: translate(0, 0) scale(0) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(600px, -250px) scale(1.5) rotate(-225deg);
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate(1200px, -500px) scale(1.2) rotate(-450deg);
+    opacity: 0;
+  }
+}
+
+@keyframes heart-explosion-11 {
+  0% {
+    transform: translate(0, 0) scale(0) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(-250px, 600px) scale(1.5) rotate(315deg);
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate(-500px, 1200px) scale(1.2) rotate(630deg);
+    opacity: 0;
+  }
+}
+
+@keyframes heart-explosion-12 {
+  0% {
+    transform: translate(0, 0) scale(0) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(250px, 600px) scale(1.5) rotate(-315deg);
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate(500px, 1200px) scale(1.2) rotate(-630deg);
+    opacity: 0;
+  }
+}
+
+.animate-heart-explosion-1 {
+  animation: heart-explosion-1 3s ease-out forwards;
+}
+
+.animate-heart-explosion-2 {
+  animation: heart-explosion-2 3s ease-out 0.2s forwards;
+}
+
+.animate-heart-explosion-3 {
+  animation: heart-explosion-3 3s ease-out 0.4s forwards;
+}
+
+.animate-heart-explosion-4 {
+  animation: heart-explosion-4 3s ease-out 0.6s forwards;
+}
+
+.animate-heart-explosion-5 {
+  animation: heart-explosion-5 3s ease-out 0.8s forwards;
+}
+
+.animate-heart-explosion-6 {
+  animation: heart-explosion-6 3s ease-out 1s forwards;
+}
+
+.animate-heart-explosion-7 {
+  animation: heart-explosion-7 3s ease-out 1.2s forwards;
+}
+
+.animate-heart-explosion-8 {
+  animation: heart-explosion-8 3s ease-out 1.4s forwards;
+}
+
+.animate-heart-explosion-9 {
+  animation: heart-explosion-9 3s ease-out 1.6s forwards;
+}
+
+.animate-heart-explosion-10 {
+  animation: heart-explosion-10 3s ease-out 1.8s forwards;
+}
+
+.animate-heart-explosion-11 {
+  animation: heart-explosion-11 3s ease-out 2s forwards;
+}
+
+.animate-heart-explosion-12 {
+  animation: heart-explosion-12 3s ease-out 2.2s forwards;
+}
+
