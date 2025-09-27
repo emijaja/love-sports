@@ -38,10 +38,10 @@ export default async function AdminPage() {
               <p className="text-sm text-blue-700">スポーツイベントの作成・編集・管理</p>
             </a>
             
-            <div className="bg-green-50 p-4 rounded-lg">
+            <a href="/admin/users" className="bg-green-50 p-4 rounded-lg hover:bg-green-100 transition-colors">
               <h3 className="font-semibold text-green-900 mb-2">ユーザー管理</h3>
               <p className="text-sm text-green-700">参加者の情報管理</p>
-            </div>
+            </a>
             
             <div className="bg-purple-50 p-4 rounded-lg">
               <h3 className="font-semibold text-purple-900 mb-2">デバイス管理</h3>
