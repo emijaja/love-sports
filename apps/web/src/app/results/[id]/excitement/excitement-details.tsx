@@ -16,6 +16,13 @@ interface ParticipantData {
       peakTime: string
     }
   }
+  heartRateDetails?: {
+    maxHeartRate?: number
+    minDistance?: number
+    peakTime?: string
+    normalHeartRate?: number
+    averageDistance?: number
+  }
 }
 
 interface ExcitementDetailsProps {
@@ -47,6 +54,12 @@ export function ExcitementDetails({ participantData, profiles }: ExcitementDetai
   const topExcitementName = topExcitementProfile?.nickname || '不明な相手'
   const topExcitementDetails = participantData.excitementDetails?.[topExcitementParticipantId]
 
+  // 心拍数と距離のデータを取得
+  const maxHeartRate = participantData.heartRateDetails?.maxHeartRate || 165
+  const minDistance = participantData.heartRateDetails?.minDistance || 2.1
+  const normalHeartRate = participantData.heartRateDetails?.normalHeartRate || 72
+  const averageDistance = participantData.heartRateDetails?.averageDistance || 5.2
+
   return (
     <div className={`transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
       <div className="bg-white rounded-xl shadow-xl p-8 border border-pink-100 relative overflow-hidden mb-8">
@@ -64,14 +77,14 @@ export function ExcitementDetails({ participantData, profiles }: ExcitementDetai
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <div className="bg-gradient-to-br from-pink-50 to-pink-100 rounded-xl p-8 text-center border border-pink-200 shadow-lg">
-            <div className="text-4xl font-bold text-pink-600 mb-2">165 bpm</div>
+            <div className="text-4xl font-bold text-pink-600 mb-2">{maxHeartRate} bpm</div>
             <div className="text-lg text-pink-700 font-medium mb-2">💓 最高心拍数</div>
-            <div className="text-sm text-gray-600">通常時: 72 bpm</div>
+            <div className="text-sm text-gray-600">通常時: {normalHeartRate} bpm</div>
           </div>
           <div className="bg-gradient-to-br from-red-50 to-rose-100 rounded-xl p-8 text-center border border-red-200 shadow-lg">
-            <div className="text-4xl font-bold text-red-600 mb-2">2.1m</div>
+            <div className="text-4xl font-bold text-red-600 mb-2">{minDistance}m</div>
             <div className="text-lg text-red-700 font-medium mb-2">💕 その時の距離</div>
-            <div className="text-sm text-gray-600">平均距離: 5.2m</div>
+            <div className="text-sm text-gray-600">平均距離: {averageDistance}m</div>
           </div>
         </div>
 

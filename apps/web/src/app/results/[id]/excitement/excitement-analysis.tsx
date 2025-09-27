@@ -36,12 +36,37 @@ export function ExcitementAnalysis({ participantData, profiles }: ExcitementAnal
     return profile?.nickname || '不明な相手'
   }
 
-  const topRanking = participantData.excitementRanking.slice(0, 3).map((id, index) => ({
-    id,
-    name: getParticipantName(id),
-    rank: index + 1,
-    percentage: 92 - (index * 14) // サンプルデータとして92%, 78%, 64%
-  }))
+  const topRanking = participantData.excitementRanking.slice(0, 3).map((id, index) => {
+    const excitementDetails = participantData.excitementDetails?.[id]
+    // 興奮レベルに基づいてパーセンテージを計算
+    let percentage = 70 - (index * 10) // デフォルト値: 70%, 60%, 50%
+    
+    if (excitementDetails?.excitementLevel) {
+      switch (excitementDetails.excitementLevel) {
+        case 'MAX':
+          percentage = 92 - (index * 8) // MAX: 92%, 84%, 76%
+          break
+        case 'HIGH':
+          percentage = 82 - (index * 8) // HIGH: 82%, 74%, 66%
+          break
+        case 'MID':
+          percentage = 72 - (index * 8) // MID: 72%, 64%, 56%
+          break
+        case 'LOW':
+          percentage = 62 - (index * 8) // LOW: 62%, 54%, 46%
+          break
+        default:
+          percentage = 70 - (index * 10)
+      }
+    }
+    
+    return {
+      id,
+      name: getParticipantName(id),
+      rank: index + 1,
+      percentage
+    }
+  })
 
   const handleReveal = () => {
     setShowBalloonPop(true)
