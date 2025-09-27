@@ -3,11 +3,45 @@
 import { useState } from 'react'
 import { TrendingUp } from 'lucide-react'
 
-export function ExcitementAnalysis() {
+interface Profile {
+  id: string
+  nickname: string
+}
+
+interface ParticipantData {
+  excitementRanking: string[]
+  excitementDetails?: {
+    [participantId: string]: {
+      excitementLevel: string
+      duration: number
+      peakTime: string
+    }
+  }
+}
+
+interface ExcitementAnalysisProps {
+  participantData: ParticipantData
+  profiles: Profile[]
+}
+
+export function ExcitementAnalysis({ participantData, profiles }: ExcitementAnalysisProps) {
   const [isRevealed, setIsRevealed] = useState(false)
   const [showBalloonPop, setShowBalloonPop] = useState(false)
   const [showRanking, setShowRanking] = useState(false)
   const [currentRank, setCurrentRank] = useState(0)
+
+  // ランキング上位3人の情報を取得
+  const getParticipantName = (id: string) => {
+    const profile = profiles.find(p => p.id === id)
+    return profile?.nickname || '不明な相手'
+  }
+
+  const topRanking = participantData.excitementRanking.slice(0, 3).map((id, index) => ({
+    id,
+    name: getParticipantName(id),
+    rank: index + 1,
+    percentage: 92 - (index * 14) // サンプルデータとして92%, 78%, 64%
+  }))
 
   const handleReveal = () => {
     setShowBalloonPop(true)
@@ -190,10 +224,10 @@ export function ExcitementAnalysis() {
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-xl font-bold text-gray-800 flex items-center space-x-2">
                       <span>💕</span>
-                      <span>田中 太郎さん</span>
+                      <span>{topRanking[0]?.name}さん</span>
                       <span className="text-yellow-500 animate-bounce">✨</span>
                     </span>
-                    <span className="text-2xl font-bold text-pink-600 animate-pulse">92%</span>
+                    <span className="text-2xl font-bold text-pink-600 animate-pulse">{topRanking[0]?.percentage}%</span>
                   </div>
                   <div className="w-full bg-pink-100 rounded-full h-5 shadow-inner border border-pink-200">
                     <div className="bg-gradient-to-r from-yellow-400 via-pink-400 to-pink-500 h-5 rounded-full shadow-sm animate-pulse relative overflow-hidden">
@@ -222,11 +256,11 @@ export function ExcitementAnalysis() {
                 </div>
                 <div className="flex-1">
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-xl font-bold text-gray-800">💖 佐藤 花子さん</span>
-                    <span className="text-2xl font-bold text-pink-500">78%</span>
+                    <span className="text-xl font-bold text-gray-800">💖 {topRanking[1]?.name}さん</span>
+                    <span className="text-2xl font-bold text-pink-500">{topRanking[1]?.percentage}%</span>
                   </div>
                   <div className="w-full bg-pink-100 rounded-full h-4 shadow-inner">
-                    <div className="bg-gradient-to-r from-gray-400 to-pink-400 h-4 rounded-full shadow-sm" style={{ width: '78%' }}></div>
+                    <div className="bg-gradient-to-r from-gray-400 to-pink-400 h-4 rounded-full shadow-sm" style={{ width: `${topRanking[1]?.percentage}%` }}></div>
                   </div>
                 </div>
               </div>
@@ -250,11 +284,11 @@ export function ExcitementAnalysis() {
                 </div>
                 <div className="flex-1">
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-xl font-bold text-gray-800">💗 山田 恵子さん</span>
-                    <span className="text-2xl font-bold text-pink-400">65%</span>
+                    <span className="text-xl font-bold text-gray-800">💗 {topRanking[2]?.name}さん</span>
+                    <span className="text-2xl font-bold text-pink-400">{topRanking[2]?.percentage}%</span>
                   </div>
                   <div className="w-full bg-pink-100 rounded-full h-4 shadow-inner">
-                    <div className="bg-gradient-to-r from-orange-400 to-pink-300 h-4 rounded-full shadow-sm" style={{ width: '65%' }}></div>
+                    <div className="bg-gradient-to-r from-orange-400 to-pink-300 h-4 rounded-full shadow-sm" style={{ width: `${topRanking[2]?.percentage}%` }}></div>
                   </div>
                 </div>
               </div>
@@ -299,7 +333,7 @@ export function ExcitementAnalysis() {
                     ✨ 魔法の総合結果 ✨
                   </div>
                   <div className="text-lg text-purple-700 font-bold mb-3">
-                    💖 田中 太郎さんが一番あなたをドキドキさせました！ 💖
+                    💖 {topRanking[0]?.name}さんが一番あなたをドキドキさせました！ 💖
                   </div>
                   <div className="text-sm text-pink-600 bg-white bg-opacity-60 rounded-lg p-3 border border-pink-200">
                     🫀 心拍数が最も上昇した相手です<br/>

@@ -55,6 +55,33 @@ export default async function ExcitementResultPage({ params }: ExcitementResultP
     notFound()
   }
 
+  // 結果データの取得
+  const { data: resultData } = await supabase
+    .from('results_final')
+    .select('per_participant_json')
+    .eq('event_id', id)
+    .single()
+
+  if (!resultData) {
+    notFound()
+  }
+
+  const participantData = resultData.per_participant_json[session.user.id]
+  if (!participantData) {
+    notFound()
+  }
+
+  // 関連する参加者のプロフィールを取得
+  const relatedParticipantIds = [
+    ...participantData.excitementRanking,
+    ...(participantData.heartRateDetails?.peakNearestParticipant ? [participantData.heartRateDetails.peakNearestParticipant] : [])
+  ].filter((id, index, self) => self.indexOf(id) === index) // 重複除去
+
+  const { data: profiles } = await supabase
+    .from('profiles')
+    .select('id, nickname')
+    .in('id', relatedParticipantIds)
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-rose-50 to-red-50 relative overflow-hidden">
       {/* 浮遊するハートのアニメーション */}
@@ -90,12 +117,21 @@ export default async function ExcitementResultPage({ params }: ExcitementResultP
         </div>
 
         {/* メイン結果 */}
-        <ExcitementMainResult />
+        <ExcitementMainResult 
+          participantData={participantData}
+          profiles={profiles || []}
+        />
 
         {/* 詳細データ - スクロールで表示 */}
         <div className="space-y-6 mt-8">
-          <ExcitementDetails />
-          <ExcitementAnalysis />
+          <ExcitementDetails 
+            participantData={participantData}
+            profiles={profiles || []}
+          />
+          <ExcitementAnalysis 
+            participantData={participantData}
+            profiles={profiles || []}
+          />
 
           {/* 他の結果へのリンク */}
           <div className="bg-white rounded-xl shadow-lg p-6 border border-pink-100 relative overflow-hidden">

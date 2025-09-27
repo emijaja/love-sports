@@ -3,12 +3,38 @@
 import { useState, useEffect } from 'react'
 import { Heart, Sparkles } from 'lucide-react'
 
-export function ExcitementMainResult() {
+interface Profile {
+  id: string
+  nickname: string
+}
+
+interface ParticipantData {
+  excitementRanking: string[]
+  excitementDetails?: {
+    [participantId: string]: {
+      excitementLevel: string
+      duration: number
+      peakTime: string
+    }
+  }
+}
+
+interface ExcitementMainResultProps {
+  participantData: ParticipantData
+  profiles: Profile[]
+}
+
+export function ExcitementMainResult({ participantData, profiles }: ExcitementMainResultProps) {
   const [isRevealed, setIsRevealed] = useState(false)
   const [showConfetti, setShowConfetti] = useState(false)
   const [showHeartBurst, setShowHeartBurst] = useState(false)
   const [showFullScreen, setShowFullScreen] = useState(false)
   const [showHeartExplosion, setShowHeartExplosion] = useState(false)
+
+  // 最もドキドキした相手の情報を取得
+  const topExcitementParticipantId = participantData.excitementRanking[0]
+  const topExcitementProfile = profiles.find(p => p.id === topExcitementParticipantId)
+  const topExcitementName = topExcitementProfile?.nickname || '不明な相手'
 
   const handleReveal = () => {
     setIsRevealed(true)
@@ -180,7 +206,7 @@ export function ExcitementMainResult() {
                 <div className="flex justify-center items-center space-x-2 mb-6">
                   <div className="text-6xl animate-heart-wiggle-1">💕</div>
                   <h2 className="text-7xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent animate-text-glow">
-                    田中 太郎さん
+                    {topExcitementName}さん 💖
                   </h2>
                   <div className="text-6xl animate-heart-wiggle-2">💖</div>
                 </div>
@@ -229,7 +255,7 @@ export function ExcitementMainResult() {
               <div className="flex justify-center items-center space-x-2 mb-4">
                 <div className="text-3xl animate-pulse">💕</div>
                 <h2 className="text-4xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
-                  田中 太郎さん
+                  {topExcitementName}さん 💖
                 </h2>
                 <div className="text-3xl animate-pulse" style={{animationDelay: '0.3s'}}>💖</div>
               </div>
