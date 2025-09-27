@@ -43,10 +43,10 @@ export default async function AdminPage() {
               <p className="text-sm text-green-700">参加者の情報管理</p>
             </a>
             
-            <div className="bg-purple-50 p-4 rounded-lg">
+            <a href="/admin/devices" className="bg-purple-50 p-4 rounded-lg hover:bg-purple-100 transition-colors">
               <h3 className="font-semibold text-purple-900 mb-2">デバイス管理</h3>
               <p className="text-sm text-purple-700">測定デバイスの管理・設定</p>
-            </div>
+            </a>
           </div>
 
           <div className="mt-8">
