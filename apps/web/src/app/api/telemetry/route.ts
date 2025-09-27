@@ -97,7 +97,7 @@ export async function POST(request: NextRequest) {
         device_id: assignment.device_id,
         peer_device_id: nearbyDeviceId,
         timestamp_ms: timestampMs,
-        distance_m: Math.round(distance * 1000), // メートルに変換（小数点以下は四捨五入）
+        distance_m: Math.round(distance), // メートル単位で保存（小数点以下は四捨五入）
       })
     
     if (peersError) {
@@ -120,7 +120,7 @@ export async function POST(request: NextRequest) {
         timestampMs,
         heartRate,
         nearbyDeviceId,
-        distance: Math.round(distance * 1000),
+        distance: Math.round(distance),
       }
     })
     
