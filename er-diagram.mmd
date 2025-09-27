@@ -1,0 +1,76 @@
+erDiagram
+    PROFILES {
+        uuid id PK "auth.users.idと連携"
+        text nickname "ニックネーム"
+        text gender "性別"
+        text image_url "プロフィール画像URL"
+        text bio "自己紹介文"
+        text role "ロール(admin/user)"
+        timestamp created_at "作成日時"
+        timestamp updated_at "更新日時"
+    }
+
+    EVENTS {
+        uuid id PK "イベントID"
+        text name "イベント名"
+        bigint starts_at_ms "開始時刻(ms)"
+        bigint ends_at_ms "終了時刻(ms)"
+        text status "ステータス"
+        timestamp created_at "作成日時"
+    }
+
+    DEVICES {
+        text id PK "デバイスID"
+        text note "メモ"
+        timestamp registered_at "登録日時"
+    }
+
+    DEVICE_ASSIGNMENTS {
+        uuid event_id FK "イベントID"
+        uuid participant_id FK "参加者ID"
+        text device_id FK "デバイスID"
+        timestamp assigned_at "割り当て日時"
+    }
+
+    TELEMETRY {
+        uuid event_id FK "イベントID"
+        text device_id FK "デバイスID"
+        bigint timestamp_ms "計測時刻(ms)"
+        integer heart_rate_bpm "心拍数(BPM)"
+        integer battery_pct "バッテリー残量(%)"
+    }
+
+    TELEMETRY_PEERS {
+        uuid event_id FK "イベントID"
+        text device_id FK "送信元デバイスID"
+        text peer_device_id FK "対象デバイスID"
+        bigint timestamp_ms "計測時刻(ms)"
+        integer distance_m "距離(メートル)"
+    }
+
+    RESULTS_INTERVAL {
+        uuid event_id PK,FK "イベントID"
+        bigint generated_at_ms "生成時刻(ms)"
+        jsonb per_participant_json "参加者別結果(JSON)"
+    }
+
+    RESULTS_FINAL {
+        uuid event_id PK,FK "イベントID"
+        bigint generated_at_ms "生成時刻(ms)"
+        jsonb per_participant_json "参加者別結果(JSON)"
+    }
+
+    %% リレーションシップ
+    PROFILES ||--o{ DEVICE_ASSIGNMENTS : "participates_in"
+    EVENTS ||--o{ DEVICE_ASSIGNMENTS : "has_participants"
+    DEVICES ||--o{ DEVICE_ASSIGNMENTS : "assigned_to"
+    
+    EVENTS ||--o{ TELEMETRY : "collects_data"
+    DEVICES ||--o{ TELEMETRY : "sends_data"
+    
+    EVENTS ||--o{ TELEMETRY_PEERS : "tracks_distances"
+    DEVICES ||--o{ TELEMETRY_PEERS : "measures_distance_to"
+    DEVICES ||--o{ TELEMETRY_PEERS : "measured_by"
+    
+    EVENTS ||--o| RESULTS_INTERVAL : "has_interval_results"
+    EVENTS ||--o| RESULTS_FINAL : "has_final_results"
