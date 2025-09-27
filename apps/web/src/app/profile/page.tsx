@@ -17,7 +17,7 @@ export default async function ProfilePage() {
   // ユーザー情報を取得
   const { data: profile } = await supabase
     .from('profiles')
-    .select('*')
+    .select('id, nickname, gender, bio, image_url, role')
     .eq('id', session.user.id)
     .single()
 

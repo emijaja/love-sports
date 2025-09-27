@@ -5,17 +5,14 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useState } from 'react'
 import { User, MessageSquare } from 'lucide-react'
-import { updateProfile } from '../actions'
+import { updateProfile, uploadProfileImage } from '../actions'
+import ImageUpload from './ImageUpload'
 
 const profileSchema = z.object({
   nickname: z
     .string()
     .min(1, 'ニックネームを入力してください')
     .max(50, 'ニックネームは50文字以内で入力してください'),
-  gender: z
-    .enum(['male', 'female'], {
-      required_error: '性別を選択してください'
-    }),
   bio: z
     .string()
     .max(500, '自己紹介は500文字以内で入力してください')
@@ -30,12 +27,16 @@ interface ProfileFormProps {
     nickname?: string
     gender?: string
     bio?: string
+    image_url?: string
   } | null
 }
 
 export default function ProfileForm({ profile }: ProfileFormProps) {
   const [error, setError] = useState<string>('')
   const [success, setSuccess] = useState<string>('')
+  const [imageFile, setImageFile] = useState<File | null>(null)
+  const [imageError, setImageError] = useState<string>('')
+  const [imageUploading, setImageUploading] = useState(false)
 
   const {
     register,
@@ -45,16 +46,44 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
     resolver: zodResolver(profileSchema),
     defaultValues: {
       nickname: profile?.nickname || '',
-      gender: (profile?.gender as 'male' | 'female') || undefined,
       bio: profile?.bio || ''
     }
   })
+
+  const handleImageChange = (file: File | null) => {
+    setImageFile(file)
+    setImageError('')
+  }
+
+  const handleImageUpload = async () => {
+    if (!imageFile) return
+
+    setImageUploading(true)
+    setImageError('')
+
+    try {
+      const formData = new FormData()
+      formData.append('image', imageFile)
+      await uploadProfileImage(formData)
+      setSuccess('プロフィール画像を更新しました')
+      setImageFile(null)
+    } catch (err) {
+      setImageError(err instanceof Error ? err.message : '画像のアップロードに失敗しました')
+    } finally {
+      setImageUploading(false)
+    }
+  }
 
   const onSubmit = async (data: ProfileForm) => {
     setError('')
     setSuccess('')
     
     try {
+      // 画像がある場合は先にアップロード
+      if (imageFile) {
+        await handleImageUpload()
+      }
+      
       await updateProfile(data)
       setSuccess('プロフィールを更新しました')
     } catch (err) {
@@ -76,6 +105,28 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
       {success && (
         <div className="p-3 text-sm text-green-600 bg-green-50 border border-green-200 rounded-md">
           {success}
+        </div>
+      )}
+
+      <ImageUpload
+        currentImageUrl={profile?.image_url}
+        onImageChange={handleImageChange}
+        error={imageError}
+      />
+
+      {imageFile && (
+        <div className="flex items-center justify-between p-3 bg-blue-50 border border-blue-200 rounded-md">
+          <span className="text-sm text-blue-800">
+            画像が選択されました: {imageFile.name}
+          </span>
+          <button
+            type="button"
+            onClick={handleImageUpload}
+            disabled={imageUploading}
+            className="px-3 py-1 text-xs font-medium text-white bg-blue-600 rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {imageUploading ? 'アップロード中...' : '画像をアップロード'}
+          </button>
         </div>
       )}
 
@@ -103,40 +154,16 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
         )}
       </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-3">
-          性別
-        </label>
-        <div className="space-y-2">
-          <div className="flex items-center">
-            <input
-              {...register('gender')}
-              id="male"
-              type="radio"
-              value="male"
-              className="h-4 w-4 text-pink-600 focus:ring-pink-500 border-gray-300"
-            />
-            <label htmlFor="male" className="ml-3 text-sm text-gray-700">
-              男性
-            </label>
-          </div>
-          <div className="flex items-center">
-            <input
-              {...register('gender')}
-              id="female"
-              type="radio"
-              value="female"
-              className="h-4 w-4 text-pink-600 focus:ring-pink-500 border-gray-300"
-            />
-            <label htmlFor="female" className="ml-3 text-sm text-gray-700">
-              女性
-            </label>
+      {profile?.gender && (
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            性別
+          </label>
+          <div className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-700">
+            {profile.gender === 'male' ? '男性' : profile.gender === 'female' ? '女性' : profile.gender}
           </div>
         </div>
-        {errors.gender && (
-          <p className="mt-2 text-sm text-red-600">{errors.gender.message}</p>
-        )}
-      </div>
+      )}
 
       <div>
         <label htmlFor="bio" className="block text-sm font-medium text-gray-700 mb-2">
