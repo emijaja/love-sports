@@ -1,9 +1,24 @@
 import { createServerSupabaseClient } from '@/lib/supabase'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Smartphone, Wifi, WifiOff, Plus, Users, Calendar } from 'lucide-react'
-import { deleteDevice } from './actions'
+import { ArrowLeft, Smartphone, Wifi, WifiOff, Users, Calendar, UserMinus } from 'lucide-react'
+import { deleteDevice, assignDevice, unassignDevice } from './actions'
 import AddDeviceForm from './add-device-form'
+import AssignDeviceForm from './assign-device-form'
+
+interface Assignment {
+  device_id: string
+  event_id: string
+  participant_id: string
+  assigned_at: string
+  events?: {
+    name: string
+    status: string
+  }
+  profiles?: {
+    nickname: string
+  }
+}
 
 export default async function AdminDevicesPage() {
   const supabase = await createServerSupabaseClient()
@@ -45,18 +60,34 @@ export default async function AdminDevicesPage() {
       profiles:profiles(nickname)
     `)
 
+  // イベント一覧を取得
+  const { data: events } = await supabase
+    .from('events')
+    .select('id, name, status')
+    .order('created_at', { ascending: false })
+
+  // ユーザー一覧を取得
+  const { data: users } = await supabase
+    .from('profiles')
+    .select('id, nickname')
+    .eq('role', 'user')
+    .order('nickname')
+
   // デバイスごとの割り当て状況をマップ化
-  const deviceAssignments = new Map()
-  assignments?.forEach(assignment => {
+  const deviceAssignments = new Map<string, Assignment[]>()
+  assignments?.forEach((assignment) => {
     if (!deviceAssignments.has(assignment.device_id)) {
       deviceAssignments.set(assignment.device_id, [])
     }
-    deviceAssignments.get(assignment.device_id).push(assignment)
+    deviceAssignments.get(assignment.device_id)?.push(assignment as Assignment)
   })
 
   // 統計情報
   const totalDevices = devices?.length || 0
-  const assignedDevices = new Set(assignments?.map(a => a.device_id)).size
+  const activeAssignmentDevices = assignments?.filter(a => 
+    a.events && a.events.status !== 'ended'
+  ).map(a => a.device_id) || []
+  const assignedDevices = new Set(activeAssignmentDevices).size
   const availableDevices = totalDevices - assignedDevices
 
   return (
@@ -147,8 +178,8 @@ export default async function AdminDevicesPage() {
                 <tbody className="bg-white divide-y divide-gray-200">
                   {devices?.map((device) => {
                     const assignments = deviceAssignments.get(device.id) || []
-                    const activeAssignments = assignments.filter(a => 
-                      a.events && ['preparing', 'active', 'interval'].includes(a.events.status)
+                    const activeAssignments = assignments.filter((a: Assignment) => 
+                      a.events && a.events.status !== 'ended'
                     )
                     const isAssigned = activeAssignments.length > 0
 
@@ -183,7 +214,7 @@ export default async function AdminDevicesPage() {
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                           {activeAssignments.length > 0 ? (
                             <div className="space-y-1">
-                              {activeAssignments.map((assignment, index) => (
+                              {activeAssignments.map((assignment: Assignment, index: number) => (
                                 <div key={index} className="flex items-center space-x-2">
                                   <Users className="h-3 w-3 text-gray-400" />
                                   <span className="text-xs">{assignment.profiles?.nickname}</span>
@@ -200,20 +231,48 @@ export default async function AdminDevicesPage() {
                           {new Date(device.registered_at).toLocaleDateString('ja-JP')}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <form action={deleteDevice} className="inline">
-                            <input type="hidden" name="deviceId" value={device.id} />
-                            <button
-                              type="submit"
-                              disabled={isAssigned}
-                              className={`text-sm px-3 py-1 rounded-md transition-colors ${
-                                isAssigned
-                                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                                  : 'bg-red-100 text-red-700 hover:bg-red-200'
-                              }`}
-                            >
-                              {isAssigned ? '使用中' : '削除'}
-                            </button>
-                          </form>
+                          <div className="flex space-x-2">
+                            {/* アサインボタン */}
+                            {!isAssigned && (
+                              <AssignDeviceForm
+                                deviceId={device.id}
+                                onAssign={assignDevice}
+                                events={events || []}
+                                users={users || []}
+                              />
+                            )}
+                            
+                            {/* アサイン解除ボタン */}
+                            {isAssigned && activeAssignments.map((assignment: Assignment, index: number) => (
+                              <form key={index} action={unassignDevice} className="inline">
+                                <input type="hidden" name="eventId" value={assignment.event_id} />
+                                <input type="hidden" name="deviceId" value={device.id} />
+                                <button
+                                  type="submit"
+                                  className="inline-flex items-center px-3 py-1 bg-orange-100 text-orange-700 text-sm font-medium rounded-md hover:bg-orange-200 transition-colors"
+                                >
+                                  <UserMinus className="h-3 w-3 mr-1" />
+                                  解除
+                                </button>
+                              </form>
+                            ))}
+                            
+                            {/* 削除ボタン */}
+                            <form action={deleteDevice} className="inline">
+                              <input type="hidden" name="deviceId" value={device.id} />
+                              <button
+                                type="submit"
+                                disabled={isAssigned}
+                                className={`text-sm px-3 py-1 rounded-md transition-colors ${
+                                  isAssigned
+                                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                    : 'bg-red-100 text-red-700 hover:bg-red-200'
+                                }`}
+                              >
+                                {isAssigned ? '使用中' : '削除'}
+                              </button>
+                            </form>
+                          </div>
                         </td>
                       </tr>
                     )
