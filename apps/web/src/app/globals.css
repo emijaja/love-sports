@@ -67,3 +67,850 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-in-out forwards;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* ハートバーストアニメーション */
+  .animate-heart-burst {
+    animation: heartBurst 2s ease-out forwards;
+  }
+
+  .animate-heart-burst-2 {
+    animation: heartBurst2 2s ease-out forwards;
+  }
+
+  .animate-heart-burst-3 {
+    animation: heartBurst3 2s ease-out forwards;
+  }
+
+  .animate-heart-burst-4 {
+    animation: heartBurst4 2s ease-out forwards;
+  }
+
+  .animate-heart-burst-5 {
+    animation: heartBurst5 2s ease-out forwards;
+  }
+
+  .animate-heart-burst-6 {
+    animation: heartBurst6 2s ease-out forwards;
+  }
+
+  .animate-heart-burst-7 {
+    animation: heartBurst7 2s ease-out forwards;
+  }
+
+  /* ハートエクスプロージョンアニメーション */
+  .animate-heart-explode-1 { animation: heartExplode1 3s ease-out forwards; }
+  .animate-heart-explode-2 { animation: heartExplode2 3s ease-out forwards; }
+  .animate-heart-explode-3 { animation: heartExplode3 3s ease-out forwards; }
+  .animate-heart-explode-4 { animation: heartExplode4 3s ease-out forwards; }
+  .animate-heart-explode-5 { animation: heartExplode5 3s ease-out forwards; }
+  .animate-heart-explode-6 { animation: heartExplode6 3s ease-out forwards; }
+  .animate-heart-explode-7 { animation: heartExplode7 3s ease-out forwards; }
+  .animate-heart-explode-8 { animation: heartExplode8 3s ease-out forwards; }
+  .animate-heart-explode-9 { animation: heartExplode9 3s ease-out forwards; }
+  .animate-heart-explode-10 { animation: heartExplode10 3s ease-out forwards; }
+  .animate-heart-explode-11 { animation: heartExplode11 3s ease-out forwards; }
+  .animate-heart-explode-12 { animation: heartExplode12 3s ease-out forwards; }
+  .animate-heart-explode-13 { animation: heartExplode13 3s ease-out forwards; }
+  .animate-heart-explode-14 { animation: heartExplode14 3s ease-out forwards; }
+  .animate-heart-explode-15 { animation: heartExplode15 3s ease-out forwards; }
+  .animate-heart-explode-16 { animation: heartExplode16 3s ease-out forwards; }
+  .animate-heart-explode-17 { animation: heartExplode17 3s ease-out forwards; }
+  .animate-heart-explode-18 { animation: heartExplode18 3s ease-out forwards; }
+  .animate-heart-explode-19 { animation: heartExplode19 3s ease-out forwards; }
+  .animate-heart-explode-20 { animation: heartExplode20 3s ease-out forwards; }
+  
+  @keyframes heartBurst {
+    0% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(0.5);
+    }
+    50% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.2);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.8);
+    }
+  }
+
+  @keyframes heartBurst2 {
+    0% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(0.5);
+    }
+    50% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.1);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.7);
+    }
+  }
+
+  @keyframes heartBurst3 {
+    0% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(0.5);
+    }
+    50% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.3);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.9);
+    }
+  }
+
+  @keyframes heartBurst4 {
+    0% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(0.5);
+    }
+    50% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.0);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.6);
+    }
+  }
+
+  @keyframes heartBurst5 {
+    0% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(0.5);
+    }
+    50% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.1);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.8);
+    }
+  }
+
+  @keyframes heartBurst6 {
+    0% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(0.5);
+    }
+    50% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.0);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.7);
+    }
+  }
+
+  @keyframes heartBurst7 {
+    0% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(0.5);
+    }
+    50% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.2);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.9);
+    }
+  }
+
+  /* ハートエクスプロージョンキーフレーム */
+  @keyframes heartExplode1 {
+    0% { opacity: 1; transform: translate(-50%, -50%) scale(0.5); }
+    20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(-60vw, -80vh) scale(0.3); }
+  }
+  @keyframes heartExplode2 {
+    0% { opacity: 1; transform: translate(-50%, -50%) scale(0.5); }
+    20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(70vw, -70vh) scale(0.2); }
+  }
+  @keyframes heartExplode3 {
+    0% { opacity: 1; transform: translate(-50%, -50%) scale(0.5); }
+    20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(-50vw, 80vh) scale(0.4); }
+  }
+  @keyframes heartExplode4 {
+    0% { opacity: 1; transform: translate(-50%, -50%) scale(0.5); }
+    20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(60vw, 70vh) scale(0.3); }
+  }
+  @keyframes heartExplode5 {
+    0% { opacity: 1; transform: translate(-50%, -50%) scale(0.5); }
+    20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(-80vw, -40vh) scale(0.2); }
+  }
+  @keyframes heartExplode6 {
+    0% { opacity: 1; transform: translate(-50%, -50%) scale(0.5); }
+    20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(80vw, -50vh) scale(0.3); }
+  }
+  @keyframes heartExplode7 {
+    0% { opacity: 1; transform: translate(-50%, -50%) scale(0.5); }
+    20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(-40vw, 90vh) scale(0.4); }
+  }
+  @keyframes heartExplode8 {
+    0% { opacity: 1; transform: translate(-50%, -50%) scale(0.5); }
+    20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(90vw, 40vh) scale(0.2); }
+  }
+  @keyframes heartExplode9 {
+    0% { opacity: 1; transform: translate(-50%, -50%) scale(0.5); }
+    20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(-70vw, -20vh) scale(0.3); }
+  }
+  @keyframes heartExplode10 {
+    0% { opacity: 1; transform: translate(-50%, -50%) scale(0.5); }
+    20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(50vw, -90vh) scale(0.4); }
+  }
+  @keyframes heartExplode11 {
+    0% { opacity: 1; transform: translate(-50%, -50%) scale(0.5); }
+    20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(-30vw, 60vh) scale(0.2); }
+  }
+  @keyframes heartExplode12 {
+    0% { opacity: 1; transform: translate(-50%, -50%) scale(0.5); }
+    20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(40vw, 80vh) scale(0.3); }
+  }
+  @keyframes heartExplode13 {
+    0% { opacity: 1; transform: translate(-50%, -50%) scale(0.5); }
+    20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(-90vw, 10vh) scale(0.4); }
+  }
+  @keyframes heartExplode14 {
+    0% { opacity: 1; transform: translate(-50%, -50%) scale(0.5); }
+    20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(30vw, -60vh) scale(0.2); }
+  }
+  @keyframes heartExplode15 {
+    0% { opacity: 1; transform: translate(-50%, -50%) scale(0.5); }
+    20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(-20vw, -90vh) scale(0.3); }
+  }
+  @keyframes heartExplode16 {
+    0% { opacity: 1; transform: translate(-50%, -50%) scale(0.5); }
+    20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(80vw, 20vh) scale(0.4); }
+  }
+  @keyframes heartExplode17 {
+    0% { opacity: 1; transform: translate(-50%, -50%) scale(0.5); }
+    20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(-50vw, -30vh) scale(0.2); }
+  }
+  @keyframes heartExplode18 {
+    0% { opacity: 1; transform: translate(-50%, -50%) scale(0.5); }
+    20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(60vw, -80vh) scale(0.3); }
+  }
+  @keyframes heartExplode19 {
+    0% { opacity: 1; transform: translate(-50%, -50%) scale(0.5); }
+    20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(-40vw, 50vh) scale(0.4); }
+  }
+  @keyframes heartExplode20 {
+    0% { opacity: 1; transform: translate(-50%, -50%) scale(0.5); }
+    20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(70vw, 60vh) scale(0.2); }
+  }
+
+  /* 風船が割れるアニメーション */
+  .animate-balloon-pop {
+    animation: balloonPop 0.8s ease-out forwards;
+  }
+
+  .animate-balloon-fragments-1 {
+    animation: balloonFragments1 0.8s ease-out forwards;
+  }
+
+  .animate-balloon-fragments-2 {
+    animation: balloonFragments2 0.8s ease-out forwards;
+  }
+
+  .animate-balloon-fragments-3 {
+    animation: balloonFragments3 0.8s ease-out forwards;
+  }
+
+  .animate-balloon-fragments-4 {
+    animation: balloonFragments4 0.8s ease-out forwards;
+  }
+
+  @keyframes balloonPop {
+    0% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(0.3);
+    }
+  }
+
+  @keyframes balloonFragments1 {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.5);
+    }
+    20% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-30px, -40px) scale(0.2);
+    }
+  }
+
+  @keyframes balloonFragments2 {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.5);
+    }
+    20% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(40px, -30px) scale(0.2);
+    }
+  }
+
+  @keyframes balloonFragments3 {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.5);
+    }
+    20% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-20px, 50px) scale(0.2);
+    }
+  }
+
+  @keyframes balloonFragments4 {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.5);
+    }
+    20% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(30px, 20px) scale(0.2);
+    }
+  }
+
+  /* ハートフロートアニメーション */
+  .animate-heart-float-1 { animation: heartFloat1 4s ease-in-out infinite; }
+  .animate-heart-float-2 { animation: heartFloat2 3.5s ease-in-out infinite; }
+  .animate-heart-float-3 { animation: heartFloat3 4.5s ease-in-out infinite; }
+  .animate-heart-float-4 { animation: heartFloat4 3s ease-in-out infinite; }
+  .animate-heart-float-5 { animation: heartFloat5 4.2s ease-in-out infinite; }
+  .animate-heart-float-6 { animation: heartFloat6 3.8s ease-in-out infinite; }
+  .animate-heart-float-7 { animation: heartFloat7 4.1s ease-in-out infinite; }
+  .animate-heart-float-8 { animation: heartFloat8 3.6s ease-in-out infinite; }
+  .animate-heart-float-9 { animation: heartFloat9 4.3s ease-in-out infinite; }
+  .animate-heart-float-10 { animation: heartFloat10 3.4s ease-in-out infinite; }
+  .animate-heart-float-11 { animation: heartFloat11 4.4s ease-in-out infinite; }
+  .animate-heart-float-12 { animation: heartFloat12 3.7s ease-in-out infinite; }
+  .animate-heart-float-13 { animation: heartFloat13 4.6s ease-in-out infinite; }
+  .animate-heart-float-14 { animation: heartFloat14 3.3s ease-in-out infinite; }
+  .animate-heart-float-15 { animation: heartFloat15 4.7s ease-in-out infinite; }
+
+  /* ハートダンスアニメーション */
+  .animate-heart-dance-1 { animation: heartDance1 2.5s ease-in-out infinite; }
+  .animate-heart-dance-2 { animation: heartDance2 2.8s ease-in-out infinite; }
+  .animate-heart-dance-3 { animation: heartDance3 2.3s ease-in-out infinite; }
+  .animate-heart-dance-4 { animation: heartDance4 2.6s ease-in-out infinite; }
+  .animate-heart-dance-5 { animation: heartDance5 2.4s ease-in-out infinite; }
+  .animate-heart-dance-6 { animation: heartDance6 2.7s ease-in-out infinite; }
+
+  /* ハートスピンアニメーション */
+  .animate-heart-spin-1 { animation: heartSpin1 3s ease-in-out infinite; }
+  .animate-heart-spin-2 { animation: heartSpin2 3.5s ease-in-out infinite; }
+  .animate-heart-spin-3 { animation: heartSpin3 2.8s ease-in-out infinite; }
+
+  /* ハートウィグルアニメーション */
+  .animate-heart-wiggle-1 { animation: heartWiggle1 1.5s ease-in-out infinite; }
+  .animate-heart-wiggle-2 { animation: heartWiggle2 1.8s ease-in-out infinite; }
+  .animate-heart-wiggle-3 { animation: heartWiggle3 1.6s ease-in-out infinite; }
+  .animate-heart-wiggle-4 { animation: heartWiggle4 1.7s ease-in-out infinite; }
+
+  /* ハートオービットアニメーション */
+  .animate-heart-orbit-1 { animation: heartOrbit1 4s ease-in-out infinite; }
+  .animate-heart-orbit-2 { animation: heartOrbit2 4.5s ease-in-out infinite; }
+  .animate-heart-orbit-3 { animation: heartOrbit3 3.8s ease-in-out infinite; }
+  .animate-heart-orbit-4 { animation: heartOrbit4 4.2s ease-in-out infinite; }
+  .animate-heart-orbit-5 { animation: heartOrbit5 3.6s ease-in-out infinite; }
+
+  /* テキストアニメーション */
+  .animate-text-glow { animation: textGlow 2s ease-in-out infinite; }
+  .animate-text-shimmer { animation: textShimmer 3s ease-in-out infinite; }
+
+  /* フロートキーフレーム */
+  @keyframes heartFloat1 {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    25% { transform: translateY(-20px) rotate(5deg); }
+    50% { transform: translateY(-10px) rotate(-3deg); }
+    75% { transform: translateY(-15px) rotate(7deg); }
+  }
+
+  @keyframes heartFloat2 {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    30% { transform: translateY(-25px) rotate(-4deg); }
+    60% { transform: translateY(-5px) rotate(6deg); }
+    90% { transform: translateY(-18px) rotate(-2deg); }
+  }
+
+  @keyframes heartFloat3 {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    20% { transform: translateY(-30px) rotate(8deg); }
+    40% { transform: translateY(-8px) rotate(-5deg); }
+    70% { transform: translateY(-22px) rotate(4deg); }
+  }
+
+  @keyframes heartFloat4 {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    35% { transform: translateY(-15px) rotate(-6deg); }
+    65% { transform: translateY(-12px) rotate(3deg); }
+    85% { transform: translateY(-28px) rotate(-7deg); }
+  }
+
+  @keyframes heartFloat5 {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    15% { transform: translateY(-35px) rotate(9deg); }
+    45% { transform: translateY(-6px) rotate(-4deg); }
+    75% { transform: translateY(-20px) rotate(5deg); }
+  }
+
+  @keyframes heartFloat6 {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    25% { transform: translateY(-18px) rotate(-3deg); }
+    50% { transform: translateY(-14px) rotate(7deg); }
+    80% { transform: translateY(-32px) rotate(-8deg); }
+  }
+
+  @keyframes heartFloat7 {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    40% { transform: translateY(-24px) rotate(6deg); }
+    70% { transform: translateY(-9px) rotate(-2deg); }
+    90% { transform: translateY(-26px) rotate(8deg); }
+  }
+
+  @keyframes heartFloat8 {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    20% { transform: translateY(-16px) rotate(-5deg); }
+    60% { transform: translateY(-22px) rotate(4deg); }
+    85% { transform: translateY(-11px) rotate(-6deg); }
+  }
+
+  @keyframes heartFloat9 {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    30% { transform: translateY(-28px) rotate(7deg); }
+    55% { transform: translateY(-7px) rotate(-3deg); }
+    80% { transform: translateY(-19px) rotate(5deg); }
+  }
+
+  @keyframes heartFloat10 {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    15% { transform: translateY(-21px) rotate(-4deg); }
+    45% { transform: translateY(-13px) rotate(6deg); }
+    75% { transform: translateY(-29px) rotate(-7deg); }
+  }
+
+  @keyframes heartFloat11 {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    35% { transform: translateY(-17px) rotate(5deg); }
+    65% { transform: translateY(-25px) rotate(-8deg); }
+    90% { transform: translateY(-10px) rotate(3deg); }
+  }
+
+  @keyframes heartFloat12 {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    25% { transform: translateY(-31px) rotate(-6deg); }
+    50% { transform: translateY(-8px) rotate(4deg); }
+    80% { transform: translateY(-23px) rotate(-5deg); }
+  }
+
+  @keyframes heartFloat13 {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    40% { transform: translateY(-12px) rotate(8deg); }
+    70% { transform: translateY(-27px) rotate(-3deg); }
+    95% { transform: translateY(-15px) rotate(6deg); }
+  }
+
+  @keyframes heartFloat14 {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    20% { transform: translateY(-26px) rotate(-7deg); }
+    60% { transform: translateY(-9px) rotate(5deg); }
+    85% { transform: translateY(-24px) rotate(-4deg); }
+  }
+
+  @keyframes heartFloat15 {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    30% { transform: translateY(-14px) rotate(6deg); }
+    55% { transform: translateY(-30px) rotate(-5deg); }
+    80% { transform: translateY(-11px) rotate(7deg); }
+  }
+
+  /* ダンスキーフレーム */
+  @keyframes heartDance1 {
+    0%, 100% { transform: translate(0px, 0px) rotate(0deg) scale(1); }
+    25% { transform: translate(10px, -15px) rotate(15deg) scale(1.1); }
+    50% { transform: translate(-5px, -10px) rotate(-10deg) scale(0.9); }
+    75% { transform: translate(-10px, -20px) rotate(20deg) scale(1.05); }
+  }
+
+  @keyframes heartDance2 {
+    0%, 100% { transform: translate(0px, 0px) rotate(0deg) scale(1); }
+    20% { transform: translate(-8px, -12px) rotate(-12deg) scale(0.95); }
+    40% { transform: translate(12px, -8px) rotate(18deg) scale(1.1); }
+    70% { transform: translate(-6px, -18px) rotate(-15deg) scale(1.05); }
+  }
+
+  @keyframes heartDance3 {
+    0%, 100% { transform: translate(0px, 0px) rotate(0deg) scale(1); }
+    35% { transform: translate(15px, -10px) rotate(25deg) scale(1.15); }
+    65% { transform: translate(-12px, -14px) rotate(-18deg) scale(0.9); }
+    90% { transform: translate(8px, -22px) rotate(12deg) scale(1.08); }
+  }
+
+  @keyframes heartDance4 {
+    0%, 100% { transform: translate(0px, 0px) rotate(0deg) scale(1); }
+    25% { transform: translate(-10px, -16px) rotate(-20deg) scale(1.05); }
+    50% { transform: translate(6px, -6px) rotate(8deg) scale(0.95); }
+    80% { transform: translate(-14px, -24px) rotate(-25deg) scale(1.12); }
+  }
+
+  @keyframes heartDance5 {
+    0%, 100% { transform: translate(0px, 0px) rotate(0deg) scale(1); }
+    30% { transform: translate(8px, -20px) rotate(22deg) scale(1.08); }
+    60% { transform: translate(-15px, -8px) rotate(-14deg) scale(0.92); }
+    90% { transform: translate(10px, -16px) rotate(16deg) scale(1.06); }
+  }
+
+  @keyframes heartDance6 {
+    0%, 100% { transform: translate(0px, 0px) rotate(0deg) scale(1); }
+    40% { transform: translate(-6px, -14px) rotate(-16deg) scale(1.02); }
+    70% { transform: translate(14px, -12px) rotate(20deg) scale(1.1); }
+    95% { transform: translate(-8px, -26px) rotate(-22deg) scale(0.98); }
+  }
+
+  /* スピンキーフレーム */
+  @keyframes heartSpin1 {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    25% { transform: scale(1.1) rotate(90deg); }
+    50% { transform: scale(0.9) rotate(180deg); }
+    75% { transform: scale(1.05) rotate(270deg); }
+  }
+
+  @keyframes heartSpin2 {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    30% { transform: scale(1.15) rotate(120deg); }
+    60% { transform: scale(0.85) rotate(240deg); }
+    90% { transform: scale(1.08) rotate(360deg); }
+  }
+
+  @keyframes heartSpin3 {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    20% { transform: scale(1.2) rotate(72deg); }
+    40% { transform: scale(0.8) rotate(144deg); }
+    60% { transform: scale(1.1) rotate(216deg); }
+    80% { transform: scale(0.95) rotate(288deg); }
+  }
+
+  /* ウィグルキーフレーム */
+  @keyframes heartWiggle1 {
+    0%, 100% { transform: rotate(0deg) scale(1); }
+    25% { transform: rotate(15deg) scale(1.1); }
+    50% { transform: rotate(-10deg) scale(0.9); }
+    75% { transform: rotate(20deg) scale(1.05); }
+  }
+
+  @keyframes heartWiggle2 {
+    0%, 100% { transform: rotate(0deg) scale(1); }
+    30% { transform: rotate(-18deg) scale(1.08); }
+    60% { transform: rotate(12deg) scale(0.95); }
+    90% { transform: rotate(-25deg) scale(1.12); }
+  }
+
+  @keyframes heartWiggle3 {
+    0%, 100% { transform: rotate(0deg) scale(1); }
+    35% { transform: rotate(22deg) scale(1.15); }
+    70% { transform: rotate(-14deg) scale(0.88); }
+    95% { transform: rotate(18deg) scale(1.06); }
+  }
+
+  @keyframes heartWiggle4 {
+    0%, 100% { transform: rotate(0deg) scale(1); }
+    40% { transform: rotate(-20deg) scale(1.02); }
+    80% { transform: rotate(16deg) scale(0.92); }
+    100% { transform: rotate(-12deg) scale(1.08); }
+  }
+
+  /* オービットキーフレーム */
+  @keyframes heartOrbit1 {
+    0%, 100% { transform: translate(0px, 0px) scale(1); }
+    25% { transform: translate(20px, -15px) scale(1.1); }
+    50% { transform: translate(0px, -30px) scale(0.9); }
+    75% { transform: translate(-20px, -15px) scale(1.05); }
+  }
+
+  @keyframes heartOrbit2 {
+    0%, 100% { transform: translate(0px, 0px) scale(1); }
+    30% { transform: translate(-25px, -10px) scale(1.08); }
+    60% { transform: translate(-15px, -25px) scale(0.95); }
+    90% { transform: translate(25px, -10px) scale(1.12); }
+  }
+
+  @keyframes heartOrbit3 {
+    0%, 100% { transform: translate(0px, 0px) scale(1); }
+    20% { transform: translate(30px, -20px) scale(1.15); }
+    40% { transform: translate(10px, -35px) scale(0.85); }
+    60% { transform: translate(-20px, -25px) scale(1.06); }
+    80% { transform: translate(-35px, -5px) scale(0.98); }
+  }
+
+  @keyframes heartOrbit4 {
+    0%, 100% { transform: translate(0px, 0px) scale(1); }
+    35% { transform: translate(-18px, -12px) scale(1.02); }
+    70% { transform: translate(-8px, -28px) scale(0.92); }
+    100% { transform: translate(18px, -12px) scale(1.08); }
+  }
+
+  @keyframes heartOrbit5 {
+    0%, 100% { transform: translate(0px, 0px) scale(1); }
+    25% { transform: translate(22px, -18px) scale(1.1); }
+    50% { transform: translate(5px, -32px) scale(0.9); }
+    75% { transform: translate(-22px, -18px) scale(1.05); }
+  }
+
+  /* テキストアニメーション */
+  @keyframes textGlow {
+    0%, 100% { text-shadow: 0 0 5px rgba(236, 72, 153, 0.5); }
+    50% { text-shadow: 0 0 20px rgba(236, 72, 153, 0.8), 0 0 30px rgba(244, 63, 94, 0.6); }
+  }
+
+  @keyframes textShimmer {
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 1; }
+  }
+
+  /* 宝箱アニメーション */
+  .animate-treasure-open {
+    animation: treasureOpen 1.2s ease-out forwards;
+  }
+
+  .animate-treasure-glow-1 { animation: treasureGlow1 1.2s ease-out forwards; }
+  .animate-treasure-glow-2 { animation: treasureGlow2 1.2s ease-out forwards; }
+  .animate-treasure-glow-3 { animation: treasureGlow3 1.2s ease-out forwards; }
+  .animate-treasure-glow-4 { animation: treasureGlow4 1.2s ease-out forwards; }
+  .animate-treasure-glow-5 { animation: treasureGlow5 1.2s ease-out forwards; }
+  .animate-treasure-glow-6 { animation: treasureGlow6 1.2s ease-out forwards; }
+
+  .animate-treasure-hearts-1 { animation: treasureHearts1 1.2s ease-out forwards; }
+  .animate-treasure-hearts-2 { animation: treasureHearts2 1.2s ease-out forwards; }
+  .animate-treasure-hearts-3 { animation: treasureHearts3 1.2s ease-out forwards; }
+
+  /* シャイマーアニメーション */
+  .animate-shimmer {
+    animation: shimmer 2s ease-in-out infinite;
+  }
+
+  @keyframes treasureOpen {
+    0% {
+      opacity: 1;
+      transform: scale(1) rotate(0deg);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.3) rotate(5deg);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(0.8) rotate(-5deg);
+    }
+  }
+
+  @keyframes treasureGlow1 {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.5);
+    }
+    20% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-40px, -60px) scale(0.3);
+    }
+  }
+
+  @keyframes treasureGlow2 {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.5);
+    }
+    20% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(50px, -50px) scale(0.3);
+    }
+  }
+
+  @keyframes treasureGlow3 {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.5);
+    }
+    20% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-30px, 60px) scale(0.3);
+    }
+  }
+
+  @keyframes treasureGlow4 {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.5);
+    }
+    20% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(40px, 40px) scale(0.3);
+    }
+  }
+
+  @keyframes treasureGlow5 {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.5);
+    }
+    20% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-60px, -20px) scale(0.3);
+    }
+  }
+
+  @keyframes treasureGlow6 {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.5);
+    }
+    20% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(60px, -30px) scale(0.3);
+    }
+  }
+
+  @keyframes treasureHearts1 {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.5);
+    }
+    30% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-20px, -80px) scale(0.4);
+    }
+  }
+
+  @keyframes treasureHearts2 {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.5);
+    }
+    30% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(30px, -70px) scale(0.4);
+    }
+  }
+
+  @keyframes treasureHearts3 {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.5);
+    }
+    30% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-40px, -90px) scale(0.4);
+    }
+  }
+
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+}
