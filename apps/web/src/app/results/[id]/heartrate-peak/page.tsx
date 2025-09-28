@@ -83,7 +83,12 @@ export default async function HeartRatePeakResultPage({ params }: HeartRatePeakR
 
   // 最大心拍数時に最も近くにいた人の情報を取得
   const peakNearestParticipantId = participantData.heartRateDetails?.peakNearestParticipant
-  const peakNearestProfile = profiles?.find(p => p.id === peakNearestParticipantId)
+  // peakNearestParticipantIdが空の場合、heartRateRankingの最初の人を使用
+  const actualParticipantId = peakNearestParticipantId && peakNearestParticipantId.length > 0 && !peakNearestParticipantId.startsWith('DEVICE')
+    ? peakNearestParticipantId
+    : participantData.heartRateRanking[0]
+    
+  const peakNearestProfile = profiles?.find(p => p.id === actualParticipantId)
   const peakNearestName = peakNearestProfile?.nickname || '不明な相手'
   
   // 心拍数データ

@@ -50,9 +50,17 @@ export function ExcitementDetails({ participantData, profiles }: ExcitementDetai
 
   // 最もドキドキした相手の情報を取得
   const topExcitementParticipantId = participantData.excitementRanking[0]
-  const topExcitementProfile = profiles.find(p => p.id === topExcitementParticipantId)
+  
+  // 有効なユーザーIDかチェックし、無効な場合はランキングから有効なIDを探す
+  const actualExcitementParticipantId = topExcitementParticipantId && 
+    topExcitementParticipantId.length > 0 && 
+    !topExcitementParticipantId.startsWith('DEVICE')
+    ? topExcitementParticipantId
+    : participantData.excitementRanking.find(id => id && id.length > 0 && !id.startsWith('DEVICE'))
+    
+  const topExcitementProfile = profiles.find(p => p.id === actualExcitementParticipantId)
   const topExcitementName = topExcitementProfile?.nickname || '不明な相手'
-  const topExcitementDetails = participantData.excitementDetails?.[topExcitementParticipantId]
+  const topExcitementDetails = actualExcitementParticipantId ? participantData.excitementDetails?.[actualExcitementParticipantId] : undefined
 
   // 心拍数と距離のデータを取得
   const maxHeartRate = participantData.heartRateDetails?.maxHeartRate || 165
