@@ -3,8 +3,8 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Users, Activity, Wifi } from 'lucide-react'
 import EventStatusBadge from '../components/EventStatusBadge'
-import ParticipantCharts from './components/ParticipantCharts'
-import PeerDistanceCharts from './components/PeerDistanceCharts'
+import PollingParticipantCharts from './components/PollingParticipantCharts'
+import PollingPeerDistanceCharts from './components/PollingPeerDistanceCharts'
 
 
 export default async function AdminEventDetailPage({
@@ -103,10 +103,10 @@ export default async function AdminEventDetailPage({
           </div>
         </div>
 
-        {/* 参加者別グラフ */}
+        {/* 参加者別グラフ（2秒ごと更新） */}
         <div className="mb-8">
-          <ParticipantCharts 
-            telemetryData={telemetryData || []} 
+          <PollingParticipantCharts 
+            eventId={id}
             deviceAssignments={(deviceAssignments || []).map(assignment => ({
               device_id: assignment.device_id,
               participant_id: assignment.participant_id,
@@ -114,13 +114,14 @@ export default async function AdminEventDetailPage({
                 ? assignment.profiles[0] || { nickname: null }
                 : assignment.profiles
             }))}
+            enabled={true} // 常に有効にして初期表示とポーリングを両方行う
           />
         </div>
 
-        {/* ピア距離グラフ */}
+        {/* ピア距離グラフ（2秒ごと更新） */}
         <div className="mb-8">
-          <PeerDistanceCharts 
-            telemetryPeersData={telemetryPeersData || []} 
+          <PollingPeerDistanceCharts 
+            eventId={id}
             deviceAssignments={(deviceAssignments || []).map(assignment => ({
               device_id: assignment.device_id,
               participant_id: assignment.participant_id,
@@ -128,6 +129,7 @@ export default async function AdminEventDetailPage({
                 ? assignment.profiles[0] || { nickname: null }
                 : assignment.profiles
             }))}
+            enabled={true} // 常に有効にして初期表示とポーリングを両方行う
           />
         </div>
 
@@ -140,7 +142,7 @@ export default async function AdminEventDetailPage({
                 <h2 className="text-lg font-medium text-gray-900">テレメトリーデータ</h2>
               </div>
               <p className="mt-1 text-sm text-gray-600">
-                心拍数情報 (最新100件)
+                心拍数情報 (最新10件)
               </p>
             </div>
             <div className="p-6">
@@ -161,7 +163,7 @@ export default async function AdminEventDetailPage({
                       </tr>
                     </thead>
                     <tbody>
-                      {telemetryData.map((data, index) => (
+                      {telemetryData.slice(-10).map((data, index) => (
                         <tr key={index} className="border-b border-gray-100">
                           <td className="py-2 text-gray-900">{data.device_id}</td>
                           <td className="py-2 text-gray-600">
@@ -193,7 +195,7 @@ export default async function AdminEventDetailPage({
                 <h2 className="text-lg font-medium text-gray-900">ピア距離データ</h2>
               </div>
               <p className="mt-1 text-sm text-gray-600">
-                デバイス間の距離情報 (最新100件)
+                デバイス間の距離情報 (最新10件)
               </p>
             </div>
             <div className="p-6">
@@ -215,7 +217,7 @@ export default async function AdminEventDetailPage({
                       </tr>
                     </thead>
                     <tbody>
-                      {telemetryPeersData.map((data, index) => (
+                      {telemetryPeersData.slice(0, 10).map((data, index) => (
                         <tr key={index} className="border-b border-gray-100">
                           <td className="py-2 text-gray-900">{data.device_id}</td>
                           <td className="py-2 text-gray-900">{data.peer_device_id}</td>
