@@ -10,8 +10,9 @@ import PeerDistanceCharts from './components/PeerDistanceCharts'
 export default async function AdminEventDetailPage({
   params,
 }: {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }) {
+  const { id } = await params
   const supabase = await createServerSupabaseClient()
 
   // セッションを確認
@@ -36,7 +37,7 @@ export default async function AdminEventDetailPage({
   const { data: event, error: eventError } = await supabase
     .from('events')
     .select('*')
-    .eq('id', params.id)
+    .eq('id', id)
     .single()
 
   if (eventError || !event) {
@@ -53,20 +54,20 @@ export default async function AdminEventDetailPage({
         nickname
       )
     `)
-    .eq('event_id', params.id)
+    .eq('event_id', id)
 
   // テレメトリーデータを取得
   const { data: telemetryData, error: telemetryError } = await supabase
     .from('telemetry')
     .select('*')
-    .eq('event_id', params.id)
+    .eq('event_id', id)
     .order('timestamp_ms', { ascending: true })
 
   // テレメトリーピアデータを取得
   const { data: telemetryPeersData, error: telemetryPeersError } = await supabase
     .from('telemetry_peers')
     .select('*')
-    .eq('event_id', params.id)
+    .eq('event_id', id)
     .order('timestamp_ms', { ascending: false })
     .limit(100)
 
@@ -106,7 +107,13 @@ export default async function AdminEventDetailPage({
         <div className="mb-8">
           <ParticipantCharts 
             telemetryData={telemetryData || []} 
-            deviceAssignments={deviceAssignments || []}
+            deviceAssignments={(deviceAssignments || []).map(assignment => ({
+              device_id: assignment.device_id,
+              participant_id: assignment.participant_id,
+              profiles: Array.isArray(assignment.profiles) 
+                ? assignment.profiles[0] || { nickname: null }
+                : assignment.profiles
+            }))}
           />
         </div>
 
@@ -114,7 +121,13 @@ export default async function AdminEventDetailPage({
         <div className="mb-8">
           <PeerDistanceCharts 
             telemetryPeersData={telemetryPeersData || []} 
-            deviceAssignments={deviceAssignments || []}
+            deviceAssignments={(deviceAssignments || []).map(assignment => ({
+              device_id: assignment.device_id,
+              participant_id: assignment.participant_id,
+              profiles: Array.isArray(assignment.profiles) 
+                ? assignment.profiles[0] || { nickname: null }
+                : assignment.profiles
+            }))}
           />
         </div>
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 
 interface TelemetryData {
   device_id: string
@@ -131,19 +131,19 @@ export default function ParticipantCharts({ telemetryData, deviceAssignments }: 
             <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-gray-200">
               <div className="text-center">
                 <div className="text-2xl font-semibold text-gray-900">
-                  {Math.round(chartData.reduce((sum, d) => sum + d.heartRate, 0) / chartData.length) || '-'}
+                  {chartData.length > 0 ? Math.round(chartData.reduce((sum, d) => sum + (d.heartRate || 0), 0) / chartData.length) : '-'}
                 </div>
                 <div className="text-sm text-gray-500">平均心拍数</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-semibold text-gray-900">
-                  {Math.max(...chartData.map(d => d.heartRate)) || '-'}
+                  {chartData.length > 0 ? Math.max(...chartData.map(d => d.heartRate || 0)) : '-'}
                 </div>
                 <div className="text-sm text-gray-500">最大心拍数</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-semibold text-gray-900">
-                  {Math.min(...chartData.map(d => d.heartRate)) || '-'}
+                  {chartData.length > 0 ? Math.min(...chartData.map(d => d.heartRate || 0)) : '-'}
                 </div>
                 <div className="text-sm text-gray-500">最小心拍数</div>
               </div>
