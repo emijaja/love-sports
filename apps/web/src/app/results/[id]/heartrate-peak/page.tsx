@@ -72,7 +72,9 @@ export default async function HeartRatePeakResultPage({ params }: HeartRatePeakR
   const relatedParticipantIds = [
     ...participantData.heartRateRanking,
     ...(participantData.heartRateDetails?.peakNearestParticipant ? [participantData.heartRateDetails.peakNearestParticipant] : [])
-  ].filter((id, index, self) => self.indexOf(id) === index) // 重複除去
+  ]
+    .filter((id, index, self) => self.indexOf(id) === index) // 重複除去
+    .filter(id => id && id.length > 0 && !id.startsWith('DEVICE')) // 有効なユーザーIDのみ
 
   const { data: profiles } = await supabase
     .from('profiles')

@@ -165,6 +165,7 @@ export default async function ProximityResultPage({ params }: ProximityResultPag
     ...userResults.heartRateRanking,
     ...userResults.proximityRanking
   ])]
+    .filter(id => id && id.length > 0 && !id.startsWith('DEVICE')) // 有効なユーザーIDのみ
 
   const { data: participants } = await supabase
     .from('profiles')
