@@ -52,6 +52,52 @@ export default async function HeartRatePeakResultPage({ params }: HeartRatePeakR
     notFound()
   }
 
+  // 結果データの取得
+  const { data: resultData } = await supabase
+    .from('results_final')
+    .select('per_participant_json')
+    .eq('event_id', id)
+    .single()
+
+  if (!resultData) {
+    notFound()
+  }
+
+  const participantData = resultData.per_participant_json[session.user.id]
+  if (!participantData) {
+    notFound()
+  }
+
+  // 関連する参加者のプロフィールを取得
+  const relatedParticipantIds = [
+    ...participantData.heartRateRanking,
+    ...(participantData.heartRateDetails?.peakNearestParticipant ? [participantData.heartRateDetails.peakNearestParticipant] : [])
+  ]
+    .filter((id, index, self) => self.indexOf(id) === index) // 重複除去
+    .filter(id => id && id.length > 0 && !id.startsWith('DEVICE')) // 有効なユーザーIDのみ
+
+  const { data: profiles } = await supabase
+    .from('profiles')
+    .select('id, nickname')
+    .in('id', relatedParticipantIds)
+
+  // 最大心拍数時に最も近くにいた人の情報を取得
+  const peakNearestParticipantId = participantData.heartRateDetails?.peakNearestParticipant
+  const peakNearestProfile = profiles?.find(p => p.id === peakNearestParticipantId)
+  const peakNearestName = peakNearestProfile?.nickname || '不明な相手'
+  
+  // 心拍数データ
+  const heartRateData = participantData.heartRateDetails || {}
+  const peakHeartRate = heartRateData.peakHeartRate || 180
+  const peakTime = heartRateData.peakTime || '15:47'
+  const peakDistance = heartRateData.peakDistance || 1.5
+  const heartRateTimeline = heartRateData.heartRateTimeline || [
+    {"time": "15:45", "bpm": 153},
+    {"time": "15:46", "bpm": 165},
+    {"time": "15:47", "bpm": 180},
+    {"time": "15:48", "bpm": 158}
+  ]
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50 via-pink-50 to-orange-50 relative overflow-hidden">
       {/* ハート爆発アニメーション */}
@@ -315,7 +361,7 @@ export default async function HeartRatePeakResultPage({ params }: HeartRatePeakR
                   </div>
                 </div>
                 <h2 className="text-3xl font-black text-red-600 mb-3 group-hover:scale-105 transition-transform duration-300">
-                  💖 鈴木 次郎さん 💖
+                  💖 {peakNearestName}さん 💖
                 </h2>
                 <p className="text-lg text-gray-600 font-medium">最大心拍数を記録した時に最も近くにいた人</p>
                 <div className="mt-4 inline-flex items-center px-4 py-2 bg-gradient-to-r from-red-100 to-pink-100 rounded-full">
@@ -334,7 +380,7 @@ export default async function HeartRatePeakResultPage({ params }: HeartRatePeakR
                     <div className="w-16 h-16 bg-gradient-to-br from-red-400 to-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
                       <Heart className="h-8 w-8 text-white animate-pulse" />
                     </div>
-                    <div className="text-3xl font-black text-red-600 mb-2">180 bpm</div>
+                    <div className="text-3xl font-black text-red-600 mb-2">{peakHeartRate} bpm</div>
                     <div className="text-sm text-red-700 font-semibold">最大心拍数</div>
                     <div className="mt-2 text-xs text-red-600">💘 恋のドキドキ！</div>
                   </div>
@@ -346,7 +392,7 @@ export default async function HeartRatePeakResultPage({ params }: HeartRatePeakR
                     <div className="w-16 h-16 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
                       <Target className="h-8 w-8 text-white animate-pulse" />
                     </div>
-                    <div className="text-3xl font-black text-orange-600 mb-2">1.5m</div>
+                    <div className="text-3xl font-black text-orange-600 mb-2">{peakDistance}m</div>
                     <div className="text-sm text-orange-700 font-semibold">その時の距離</div>
                     <div className="mt-2 text-xs text-orange-600">💕 恋の距離！</div>
                   </div>
@@ -358,7 +404,7 @@ export default async function HeartRatePeakResultPage({ params }: HeartRatePeakR
                     <div className="w-16 h-16 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center mx-auto mb-4">
                       <Clock className="h-8 w-8 text-white animate-pulse" />
                     </div>
-                    <div className="text-3xl font-black text-yellow-600 mb-2">15:47</div>
+                    <div className="text-3xl font-black text-yellow-600 mb-2">{peakTime}</div>
                     <div className="text-sm text-yellow-700 font-semibold">記録時刻</div>
                     <div className="mt-2 text-xs text-yellow-600">💘 恋の瞬間！</div>
                   </div>
@@ -401,80 +447,61 @@ export default async function HeartRatePeakResultPage({ params }: HeartRatePeakR
               </h3>
               
               <div className="space-y-4">
-                <div className="group/item flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl hover:from-blue-50 hover:to-blue-100 transition-all duration-300 hover:scale-105">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
-                      <span className="text-sm font-bold text-yellow-600">1</span>
+                {heartRateTimeline.map((dataPoint: any, index: number) => {
+                  const isPeak = dataPoint.bpm === peakHeartRate
+                  const widthPercentage = Math.round((dataPoint.bpm / peakHeartRate) * 100)
+                  
+                  return (
+                    <div key={index} className={`group/item flex items-center justify-between p-4 rounded-xl transition-all duration-300 hover:scale-105 ${
+                      isPeak 
+                        ? 'bg-gradient-to-r from-red-50 to-pink-50 border-2 border-red-200 hover:from-red-100 hover:to-pink-100 shadow-lg'
+                        : 'bg-gradient-to-r from-gray-50 to-gray-100 hover:from-blue-50 hover:to-blue-100'
+                    }`}>
+                      <div className="flex items-center space-x-3">
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                          isPeak 
+                            ? 'bg-red-200 animate-pulse'
+                            : index === 0 ? 'bg-yellow-100' : index === 1 ? 'bg-orange-100' : 'bg-orange-100'
+                        }`}>
+                          {isPeak ? (
+                            <Crown className="w-4 h-4 text-red-600" />
+                          ) : (
+                            <span className={`text-sm font-bold ${
+                              index === 0 ? 'text-yellow-600' : 'text-orange-600'
+                            }`}>{index + 1}</span>
+                          )}
+                        </div>
+                        <span className={`text-sm font-semibold ${
+                          isPeak ? 'text-red-600 font-bold' : 'text-gray-700'
+                        }`}>{dataPoint.time}</span>
+                      </div>
+                      <div className="flex-1 mx-6">
+                        <div className="w-full bg-gray-200 rounded-full h-3">
+                          <div className={`h-3 rounded-full transition-all duration-1000 ${
+                            isPeak 
+                              ? 'bg-gradient-to-r from-red-500 to-pink-500 h-4 animate-pulse'
+                              : index === 0 
+                                ? 'bg-gradient-to-r from-yellow-400 to-yellow-500'
+                                : 'bg-gradient-to-r from-orange-400 to-orange-500'
+                          }`} style={{ width: `${widthPercentage}%` }}></div>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <span className={`font-bold ${
+                          isPeak ? 'text-xl text-red-600 font-black' : 'text-lg text-orange-600'
+                        }`}>{dataPoint.bpm} bpm</span>
+                        {isPeak ? (
+                          <div className="flex space-x-1">
+                            <div className="text-lg animate-bounce">💘</div>
+                            <div className="text-lg animate-pulse">💕</div>
+                          </div>
+                        ) : (
+                          <div className="w-2 h-2 bg-orange-400 rounded-full animate-pulse"></div>
+                        )}
+                      </div>
                     </div>
-                    <span className="text-sm font-semibold text-gray-700">15:45</span>
-                  </div>
-                  <div className="flex-1 mx-6">
-                    <div className="w-full bg-gray-200 rounded-full h-3">
-                      <div className="bg-gradient-to-r from-yellow-400 to-yellow-500 h-3 rounded-full transition-all duration-1000" style={{ width: '85%' }}></div>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-lg font-bold text-yellow-600">153 bpm</span>
-                    <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
-                  </div>
-                </div>
-                
-                <div className="group/item flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl hover:from-orange-50 hover:to-orange-100 transition-all duration-300 hover:scale-105">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
-                      <span className="text-sm font-bold text-orange-600">2</span>
-                    </div>
-                    <span className="text-sm font-semibold text-gray-700">15:46</span>
-                  </div>
-                  <div className="flex-1 mx-6">
-                    <div className="w-full bg-gray-200 rounded-full h-3">
-                      <div className="bg-gradient-to-r from-orange-400 to-orange-500 h-3 rounded-full transition-all duration-1000" style={{ width: '92%' }}></div>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-lg font-bold text-orange-600">165 bpm</span>
-                    <div className="w-2 h-2 bg-orange-400 rounded-full animate-pulse"></div>
-                  </div>
-                </div>
-                
-                <div className="group/item flex items-center justify-between p-4 bg-gradient-to-r from-red-50 to-pink-50 rounded-xl border-2 border-red-200 hover:from-red-100 hover:to-pink-100 transition-all duration-300 hover:scale-105 shadow-lg">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-red-200 rounded-full flex items-center justify-center animate-pulse">
-                      <Crown className="w-4 h-4 text-red-600" />
-                    </div>
-                    <span className="text-sm font-bold text-red-600">15:47</span>
-                  </div>
-                  <div className="flex-1 mx-6">
-                    <div className="w-full bg-gray-200 rounded-full h-4">
-                      <div className="bg-gradient-to-r from-red-500 to-pink-500 h-4 rounded-full transition-all duration-1000 animate-pulse" style={{ width: '100%' }}></div>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-xl font-black text-red-600">180 bpm</span>
-                    <div className="flex space-x-1">
-                      <div className="text-lg animate-bounce">💘</div>
-                      <div className="text-lg animate-pulse">💕</div>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="group/item flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl hover:from-orange-50 hover:to-orange-100 transition-all duration-300 hover:scale-105">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
-                      <span className="text-sm font-bold text-orange-600">4</span>
-                    </div>
-                    <span className="text-sm font-semibold text-gray-700">15:48</span>
-                  </div>
-                  <div className="flex-1 mx-6">
-                    <div className="w-full bg-gray-200 rounded-full h-3">
-                      <div className="bg-gradient-to-r from-orange-400 to-orange-500 h-3 rounded-full transition-all duration-1000" style={{ width: '88%' }}></div>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-lg font-bold text-orange-600">158 bpm</span>
-                    <div className="w-2 h-2 bg-orange-400 rounded-full animate-pulse"></div>
-                  </div>
-                </div>
+                  )
+                })}
               </div>
             </div>
           </div>

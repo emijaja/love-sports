@@ -2,7 +2,35 @@
 
 import { useState, useEffect } from 'react'
 
-export function ExcitementDetails() {
+interface Profile {
+  id: string
+  nickname: string
+}
+
+interface ParticipantData {
+  excitementRanking: string[]
+  excitementDetails?: {
+    [participantId: string]: {
+      excitementLevel: string
+      duration: number
+      peakTime: string
+    }
+  }
+  heartRateDetails?: {
+    maxHeartRate?: number
+    minDistance?: number
+    peakTime?: string
+    normalHeartRate?: number
+    averageDistance?: number
+  }
+}
+
+interface ExcitementDetailsProps {
+  participantData: ParticipantData
+  profiles: Profile[]
+}
+
+export function ExcitementDetails({ participantData, profiles }: ExcitementDetailsProps) {
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
@@ -20,6 +48,18 @@ export function ExcitementDetails() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  // 最もドキドキした相手の情報を取得
+  const topExcitementParticipantId = participantData.excitementRanking[0]
+  const topExcitementProfile = profiles.find(p => p.id === topExcitementParticipantId)
+  const topExcitementName = topExcitementProfile?.nickname || '不明な相手'
+  const topExcitementDetails = participantData.excitementDetails?.[topExcitementParticipantId]
+
+  // 心拍数と距離のデータを取得
+  const maxHeartRate = participantData.heartRateDetails?.maxHeartRate || 165
+  const minDistance = participantData.heartRateDetails?.minDistance || 2.1
+  const normalHeartRate = participantData.heartRateDetails?.normalHeartRate || 72
+  const averageDistance = participantData.heartRateDetails?.averageDistance || 5.2
+
   return (
     <div className={`transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
       <div className="bg-white rounded-xl shadow-xl p-8 border border-pink-100 relative overflow-hidden mb-8">
@@ -32,40 +72,40 @@ export function ExcitementDetails() {
           <h3 className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent mb-3">
             詳細データ 💕
           </h3>
-          <p className="text-gray-600 text-lg">田中 太郎さんとのドキドキデータ詳細</p>
+          <p className="text-gray-600 text-lg">{topExcitementName}さんとのドキドキデータ詳細</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <div className="bg-gradient-to-br from-pink-50 to-pink-100 rounded-xl p-8 text-center border border-pink-200 shadow-lg">
-            <div className="text-4xl font-bold text-pink-600 mb-2">165 bpm</div>
+            <div className="text-4xl font-bold text-pink-600 mb-2">{maxHeartRate} bpm</div>
             <div className="text-lg text-pink-700 font-medium mb-2">💓 最高心拍数</div>
-            <div className="text-sm text-gray-600">通常時: 72 bpm</div>
+            <div className="text-sm text-gray-600">通常時: {normalHeartRate} bpm</div>
           </div>
           <div className="bg-gradient-to-br from-red-50 to-rose-100 rounded-xl p-8 text-center border border-red-200 shadow-lg">
-            <div className="text-4xl font-bold text-red-600 mb-2">2.1m</div>
+            <div className="text-4xl font-bold text-red-600 mb-2">{minDistance}m</div>
             <div className="text-lg text-red-700 font-medium mb-2">💕 その時の距離</div>
-            <div className="text-sm text-gray-600">平均距離: 5.2m</div>
+            <div className="text-sm text-gray-600">平均距離: {averageDistance}m</div>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-6 text-center border border-purple-200 shadow-lg">
-            <div className="text-2xl font-bold text-purple-600 mb-1">15:23</div>
+            <div className="text-2xl font-bold text-purple-600 mb-1">{topExcitementDetails?.peakTime || '不明'}</div>
             <div className="text-sm text-purple-700 font-medium">💜 ピーク時刻</div>
           </div>
           <div className="bg-gradient-to-br from-orange-50 to-pink-50 rounded-xl p-6 text-center border border-orange-200 shadow-lg">
-            <div className="text-2xl font-bold text-orange-600 mb-1">3分42秒</div>
+            <div className="text-2xl font-bold text-orange-600 mb-1">{topExcitementDetails?.duration ? `${topExcitementDetails.duration}秒` : '不明'}</div>
             <div className="text-sm text-orange-700 font-medium">🧡 持続時間</div>
           </div>
           <div className="bg-gradient-to-br from-green-50 to-pink-50 rounded-xl p-6 text-center border border-green-200 shadow-lg">
-            <div className="text-2xl font-bold text-green-600 mb-1">+93 bpm</div>
-            <div className="text-sm text-green-700 font-medium">💚 心拍数上昇</div>
+            <div className="text-2xl font-bold text-green-600 mb-1">{topExcitementDetails?.excitementLevel || '不明'}</div>
+            <div className="text-sm text-green-700 font-medium">💚 興奮レベル</div>
           </div>
         </div>
 
         <div className="text-center">
           <div className="text-lg text-pink-600 bg-gradient-to-r from-pink-50 to-rose-50 rounded-xl p-4 border border-pink-200">
-            💖 15:23頃に最も心拍数が上昇しました 💖
+            💖 {topExcitementDetails?.peakTime || '不明な時間'}頃に最も心拍数が上昇しました 💖
           </div>
         </div>
       </div>

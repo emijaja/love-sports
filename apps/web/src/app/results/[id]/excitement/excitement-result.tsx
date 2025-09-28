@@ -3,9 +3,45 @@
 import { useState } from 'react'
 import { Heart, Sparkles } from 'lucide-react'
 
-export function ExcitementResult() {
+interface Profile {
+  id: string
+  nickname: string
+}
+
+interface ParticipantData {
+  excitementRanking: string[]
+  excitementDetails?: {
+    [participantId: string]: {
+      excitementLevel: string
+      duration: number
+      peakTime: string
+    }
+  }
+  heartRateDetails?: {
+    maxHeartRate: number
+    minDistance: number
+    peakTime: string
+  }
+}
+
+interface ExcitementResultProps {
+  participantData: ParticipantData
+  profiles: Profile[]
+}
+
+export function ExcitementResult({ participantData, profiles }: ExcitementResultProps) {
   const [isRevealed, setIsRevealed] = useState(false)
   const [showConfetti, setShowConfetti] = useState(false)
+
+  // 最もドキドキした相手の情報を取得
+  const topExcitementParticipantId = participantData.excitementRanking[0]
+  const topExcitementProfile = profiles.find(p => p.id === topExcitementParticipantId)
+  const topExcitementName = topExcitementProfile?.nickname || '不明な相手'
+
+  // 心拍数と距離の情報を取得
+  const maxHeartRate = participantData.heartRateDetails?.maxHeartRate || 165
+  const minDistance = participantData.heartRateDetails?.minDistance || 2.1
+  const peakTime = participantData.heartRateDetails?.peakTime || '15:23'
 
   const handleReveal = () => {
     setIsRevealed(true)
@@ -66,24 +102,24 @@ export function ExcitementResult() {
             <div className="text-7xl mb-4 animate-bounce">💕</div>
             <div className="space-y-4">
               <h2 className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent mb-3">
-                田中 太郎さん 💖
+                {topExcitementName}さん 💖
               </h2>
               <p className="text-gray-600 text-lg">あなたが最もドキドキした相手です ✨</p>
             </div>
 
             <div className="grid grid-cols-2 gap-4 mb-6">
               <div className="bg-gradient-to-br from-pink-50 to-pink-100 rounded-xl p-6 text-center border border-pink-200 shadow-sm animate-fade-in">
-                <div className="text-3xl font-bold text-pink-600 mb-1">165 bpm</div>
+                <div className="text-3xl font-bold text-pink-600 mb-1">{maxHeartRate} bpm</div>
                 <div className="text-sm text-pink-700 font-medium">💓 最高心拍数</div>
               </div>
               <div className="bg-gradient-to-br from-red-50 to-rose-100 rounded-xl p-6 text-center border border-red-200 shadow-sm animate-fade-in" style={{animationDelay: '0.2s'}}>
-                <div className="text-3xl font-bold text-red-600 mb-1">2.1m</div>
+                <div className="text-3xl font-bold text-red-600 mb-1">{minDistance}m</div>
                 <div className="text-sm text-red-700 font-medium">💕 その時の距離</div>
               </div>
             </div>
 
             <div className="text-center text-sm text-pink-600 bg-pink-50 rounded-lg p-3 border border-pink-200 animate-fade-in" style={{animationDelay: '0.4s'}}>
-              💖 15:23頃に最も心拍数が上昇しました 💖
+              💖 {peakTime}頃に最も心拍数が上昇しました 💖
             </div>
           </div>
         )}
