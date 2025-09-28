@@ -46,12 +46,13 @@ export function usePollingTelemetry({
       setIsLoading(true)
       setError(null)
 
-      // テレメトリーデータを取得
+      // テレメトリーデータを取得（最新100件のみ）
       const { data: telemetry, error: telemetryError } = await supabase
         .from('telemetry')
         .select('*')
         .eq('event_id', eventId)
-        .order('timestamp_ms', { ascending: true })
+        .order('timestamp_ms', { ascending: false })
+        .limit(100)
 
       if (telemetryError) {
         console.error('Telemetry fetch error:', telemetryError)
@@ -59,7 +60,7 @@ export function usePollingTelemetry({
         return
       }
 
-      // テレメトリーピアデータを取得
+      // テレメトリーピアデータを取得（最新100件のみ）
       const { data: telemetryPeers, error: telemetryPeersError } = await supabase
         .from('telemetry_peers')
         .select('*')
@@ -73,16 +74,30 @@ export function usePollingTelemetry({
         return
       }
 
-      setTelemetryData(telemetry || [])
-      setTelemetryPeersData(telemetryPeers || [])
-      setLastUpdate(new Date())
+      // データの差分をチェック（最新のタイムスタンプで比較）
+      const latestTelemetry = telemetry?.[0] // 降順でソートされているため最初の要素が最新
+      const latestPeers = telemetryPeers?.[0]
+      const prevLatestTelemetry = telemetryData[telemetryData.length - 1] // 昇順でソートされているため最後の要素が最新
+      const prevLatestPeers = telemetryPeersData[0] // 降順でソートされているため最初の要素が最新
+      
+      const hasNewTelemetryData = latestTelemetry && (!prevLatestTelemetry || latestTelemetry.timestamp_ms > prevLatestTelemetry.timestamp_ms)
+      const hasNewPeersData = latestPeers && (!prevLatestPeers || latestPeers.timestamp_ms > prevLatestPeers.timestamp_ms)
+      
+      // データが変更された場合のみ状態を更新
+      if (hasNewTelemetryData || hasNewPeersData || telemetryData.length === 0) {
+        // テレメトリーデータは時系列順にソート
+        const sortedTelemetry = (telemetry || []).sort((a, b) => a.timestamp_ms - b.timestamp_ms)
+        setTelemetryData(sortedTelemetry)
+        setTelemetryPeersData(telemetryPeers || [])
+        setLastUpdate(new Date())
+      }
     } catch (err) {
       console.error('Data fetch error:', err)
       setError('データの取得中にエラーが発生しました')
     } finally {
       setIsLoading(false)
     }
-  }, [eventId, enabled])
+  }, [eventId, enabled, telemetryData, telemetryPeersData])
 
   // 初期データ取得
   useEffect(() => {
@@ -93,7 +108,9 @@ export function usePollingTelemetry({
 
   // ポーリング設定
   useEffect(() => {
-    if (!enabled || !eventId) return
+    if (!enabled || !eventId) {
+      return
+    }
 
     const interval = setInterval(() => {
       fetchData()

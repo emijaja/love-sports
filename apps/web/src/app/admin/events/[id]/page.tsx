@@ -3,8 +3,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Users, Activity, Wifi } from 'lucide-react'
 import EventStatusBadge from '../components/EventStatusBadge'
-import PollingParticipantCharts from './components/PollingParticipantCharts'
-import PollingPeerDistanceCharts from './components/PollingPeerDistanceCharts'
+import RealtimeChartsContainer from './components/RealtimeChartsContainer'
 
 
 export default async function AdminEventDetailPage({
@@ -103,35 +102,18 @@ export default async function AdminEventDetailPage({
           </div>
         </div>
 
-        {/* 参加者別グラフ（2秒ごと更新） */}
-        <div className="mb-8">
-          <PollingParticipantCharts 
-            eventId={id}
-            deviceAssignments={(deviceAssignments || []).map(assignment => ({
-              device_id: assignment.device_id,
-              participant_id: assignment.participant_id,
-              profiles: Array.isArray(assignment.profiles) 
-                ? assignment.profiles[0] || { nickname: null }
-                : assignment.profiles
-            }))}
-            enabled={true} // 常に有効にして初期表示とポーリングを両方行う
-          />
-        </div>
-
-        {/* ピア距離グラフ（2秒ごと更新） */}
-        <div className="mb-8">
-          <PollingPeerDistanceCharts 
-            eventId={id}
-            deviceAssignments={(deviceAssignments || []).map(assignment => ({
-              device_id: assignment.device_id,
-              participant_id: assignment.participant_id,
-              profiles: Array.isArray(assignment.profiles) 
-                ? assignment.profiles[0] || { nickname: null }
-                : assignment.profiles
-            }))}
-            enabled={true} // 常に有効にして初期表示とポーリングを両方行う
-          />
-        </div>
+        {/* グラフコンテナ（2秒ごと更新） */}
+        <RealtimeChartsContainer 
+          eventId={id}
+          deviceAssignments={(deviceAssignments || []).map(assignment => ({
+            device_id: assignment.device_id,
+            participant_id: assignment.participant_id,
+            profiles: Array.isArray(assignment.profiles) 
+              ? assignment.profiles[0] || { nickname: null }
+              : assignment.profiles
+          }))}
+          enabled={true}
+        />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* テレメトリーデータ */}
