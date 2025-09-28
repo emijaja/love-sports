@@ -24,35 +24,74 @@ interface PollingParticipantChartsProps {
   eventId: string
   deviceAssignments: DeviceAssignment[]
   enabled?: boolean
+  // データを直接受け取る場合のプロパティ
+  telemetryData?: TelemetryData[]
+  isLoading?: boolean
+  error?: string | null
+  lastUpdate?: Date | null
+  refetch?: () => Promise<void>
 }
 
 export default function PollingParticipantCharts({ 
   eventId, 
   deviceAssignments, 
-  enabled = true 
+  enabled = true,
+  // データを直接受け取る場合
+  telemetryData: propTelemetryData,
+  isLoading: propIsLoading,
+  error: propError,
+  lastUpdate: propLastUpdate,
+  refetch: propRefetch
 }: PollingParticipantChartsProps) {
-  const { telemetryData, isLoading, error, lastUpdate, refetch } = usePollingTelemetry({ 
+  // データが直接渡された場合はそれを使用、そうでなければポーリングフックを使用
+  const hookData = usePollingTelemetry({ 
     eventId, 
-    enabled,
-    intervalMs: 2000 // 2秒ごと
+    enabled: enabled && !propTelemetryData, // データが直接渡された場合はポーリングを無効化
+    intervalMs: 2000
   })
+  
+  const telemetryData = propTelemetryData || hookData.telemetryData
+  const isLoading = propIsLoading ?? hookData.isLoading
+  const error = propError ?? hookData.error
+  const lastUpdate = propLastUpdate ?? hookData.lastUpdate
+  const refetch = propRefetch || hookData.refetch
+  
   const [isRefreshing, setIsRefreshing] = useState(false)
 
-  // デバイスIDから参加者名へのマッピングを作成
-  const deviceToParticipant = new Map<string, string>()
-  deviceAssignments.forEach(assignment => {
+
+  // デバイスIDから参加者名へのマッピングを作成（順序を保持）
+  const deviceToParticipant = new Map<string, { name: string, deviceId: string }>()
+  const participantOrder: { name: string, deviceId: string }[] = [] // 参加者の表示順序を保持
+  
+  // デバイスIDでソートしてから順序を記録
+  const sortedAssignments = [...deviceAssignments].sort((a, b) => a.device_id.localeCompare(b.device_id))
+  
+  sortedAssignments.forEach(assignment => {
     const nickname = assignment.profiles?.nickname || `参加者 ${assignment.participant_id.slice(0, 8)}`
-    deviceToParticipant.set(assignment.device_id, nickname)
+    const participantInfo = { name: nickname, deviceId: assignment.device_id }
+    deviceToParticipant.set(assignment.device_id, participantInfo)
+    participantOrder.push(participantInfo) // 順序を記録
   })
 
-  // 参加者ごとにデータをグループ化
+  // 参加者ごとにデータをグループ化（各人ごとの直近30件）
   const participantData = new Map<string, TelemetryData[]>()
+  
+  // まず、各参加者のデータを時系列順にソートして最新30件を取得
+  const dataByDevice = new Map<string, TelemetryData[]>()
   telemetryData.forEach(data => {
-    const participantName = deviceToParticipant.get(data.device_id) || `デバイス ${data.device_id}`
-    if (!participantData.has(participantName)) {
-      participantData.set(participantName, [])
+    if (!dataByDevice.has(data.device_id)) {
+      dataByDevice.set(data.device_id, [])
     }
-    participantData.get(participantName)!.push(data)
+    dataByDevice.get(data.device_id)!.push(data)
+  })
+  
+  // 各デバイスのデータを時系列順にソートして最新15件を取得
+  dataByDevice.forEach((deviceData, deviceId) => {
+    const participantInfo = deviceToParticipant.get(deviceId) || { name: `デバイス ${deviceId}`, deviceId }
+    const sortedData = deviceData
+      .sort((a, b) => a.timestamp_ms - b.timestamp_ms)
+      .slice(-15) // 最新15件
+    participantData.set(participantInfo.name, sortedData)
   })
 
   // チャート用データを準備
@@ -115,7 +154,7 @@ export default function PollingParticipantCharts({
           <div className="flex items-center gap-2">
             <div className="flex items-center text-blue-600">
               <Clock className="h-4 w-4 mr-1" />
-              <span className="text-sm">2秒ごと更新中</span>
+              <span className="text-sm">10秒ごと更新中</span>
             </div>
             <button
               onClick={handleRefresh}
@@ -140,7 +179,7 @@ export default function PollingParticipantCharts({
         <div className="flex items-center gap-4">
           <div className="flex items-center text-blue-600">
             <Clock className="h-4 w-4 mr-1" />
-            <span className="text-sm">2秒ごと更新中</span>
+            <span className="text-sm">10秒ごと更新中</span>
             {isLoading && <RefreshCw className="h-3 w-3 ml-1 animate-spin" />}
           </div>
           {lastUpdate && (
@@ -159,14 +198,18 @@ export default function PollingParticipantCharts({
         </div>
       </div>
       
-      {Array.from(participantData.entries()).map(([participantName, data], index) => {
+      {participantOrder.map((participantInfo, index) => {
+        const data = participantData.get(participantInfo.name) || []
         const chartData = prepareChartData(data)
         const color = colors[index % colors.length]
         
         if (chartData.length === 0) {
           return (
-            <div key={participantName} className="bg-white shadow-sm rounded-lg p-6">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">{participantName}</h3>
+            <div key={participantInfo.name} className="bg-white shadow-sm rounded-lg p-6">
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                {participantInfo.name}
+                <span className="text-sm text-gray-500 ml-2">(ID: {participantInfo.deviceId})</span>
+              </h3>
               <div className="text-center py-8 text-gray-500">
                 心拍数データがありません
               </div>
@@ -175,8 +218,11 @@ export default function PollingParticipantCharts({
         }
 
         return (
-          <div key={participantName} className="bg-white shadow-sm rounded-lg p-6">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">{participantName}</h3>
+          <div key={participantInfo.name} className="bg-white shadow-sm rounded-lg p-6">
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              {participantInfo.name}
+              <span className="text-sm text-gray-500 ml-2">(ID: {participantInfo.deviceId})</span>
+            </h3>
             
             {/* 心拍数グラフ */}
             <div>
