@@ -10,7 +10,7 @@ const TelemetryRequestSchema = z.object({
   heartRate: z.number().min(30).max(250, '心拍数は30-250の範囲である必要があります'),
 })
 
-type TelemetryRequest = z.infer<typeof TelemetryRequestSchema>
+// type TelemetryRequest = z.infer<typeof TelemetryRequestSchema>
 
 // Supabaseクライアント
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
@@ -151,7 +151,7 @@ export async function POST(request: NextRequest) {
 }
 
 // OPTIONSメソッドでCORS対応
-export async function OPTIONS(request: NextRequest) {
+export async function OPTIONS(_request: NextRequest) {
   return new NextResponse(null, {
     status: 200,
     headers: {

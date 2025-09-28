@@ -447,7 +447,7 @@ export default async function HeartRatePeakResultPage({ params }: HeartRatePeakR
               </h3>
               
               <div className="space-y-4">
-                {heartRateTimeline.map((dataPoint, index) => {
+                {heartRateTimeline.map((dataPoint: any, index: number) => {
                   const isPeak = dataPoint.bpm === peakHeartRate
                   const widthPercentage = Math.round((dataPoint.bpm / peakHeartRate) * 100)
                   

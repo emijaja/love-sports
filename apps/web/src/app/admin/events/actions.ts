@@ -3,6 +3,50 @@
 import { createServerSupabaseClient } from '@/lib/supabase'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { SupabaseClient } from '@supabase/supabase-js'
+
+interface ParticipantResults {
+  excitementRanking: string[]
+  heartRateRanking: string[]
+  proximityRanking: string[]
+  excitementDetails?: Record<string, {
+    excitementLevel: string
+    duration: number
+    peakTime: string
+  }>
+  heartRateDetails?: {
+    peakHeartRate: number
+    peakTime: string
+    peakDistance: number
+    peakNearestParticipant: string
+    heartRateTimeline: Array<{
+      time: string
+      bpm: number
+    }>
+  }
+  proximityDetails?: Record<string, {
+    averageDistance: number
+    proximityTime: number
+    minDistance: number
+    distanceTimeline?: Array<{
+      time: string
+      distance: number
+    }>
+  }>
+}
+
+interface Assignment {
+  participant_id: string
+  device_id: string
+}
+
+interface TelemetryData {
+  heart_rate_bpm: number
+  distance_m: number
+  timestamp: string
+  timestamp_ms: number
+  peer_device_id?: string
+}
 
 export async function updateEventStatus(eventId: string, status: string) {
   const supabase = await createServerSupabaseClient()
@@ -63,7 +107,7 @@ async function createResultsFinal(eventId: string) {
   }
 }
 
-async function generateResultsFromTelemetry(supabase: any, eventId: string) {
+async function generateResultsFromTelemetry(supabase: SupabaseClient, eventId: string) {
   // デバイス割り当て情報を取得
   const { data: assignments } = await supabase
     .from('device_assignments')
@@ -75,7 +119,7 @@ async function generateResultsFromTelemetry(supabase: any, eventId: string) {
   }
 
   // 各参加者のテレメトリデータを取得・分析
-  const participantResults: Record<string, any> = {}
+  const participantResults: Record<string, ParticipantResults> = {}
 
   for (const assignment of assignments) {
     const participantId = assignment.participant_id
@@ -99,9 +143,9 @@ async function generateResultsFromTelemetry(supabase: any, eventId: string) {
       .order('timestamp_ms')
 
     // 他の参加者との相対結果を計算
-    const otherParticipants = assignments
-      .filter(a => a.participant_id !== participantId)
-      .map(a => a.participant_id)
+    // const otherParticipants = assignments
+    //   .filter(a => a.participant_id !== participantId)
+    //   .map(a => a.participant_id)
 
     // 心拍数ランキングを生成
     const heartRateRanking = await generateHeartRateRanking(supabase, eventId, assignments, participantId)
@@ -113,9 +157,9 @@ async function generateResultsFromTelemetry(supabase: any, eventId: string) {
     const excitementRanking = await generateExcitementRanking(supabase, eventId, assignments, participantId)
 
     // 詳細データを計算
-    const heartRateDetails = calculateHeartRateDetails(heartRateData, proximityData, assignments)
-    const proximityDetails = calculateProximityDetails(proximityData, assignments)
-    const excitementDetails = calculateExcitementDetails(heartRateData, assignments)
+    const heartRateDetails = calculateHeartRateDetails(heartRateData as TelemetryData[] || [], proximityData as TelemetryData[] || [], assignments)
+    const proximityDetails = calculateProximityDetails(proximityData as TelemetryData[] || [], assignments)
+    const excitementDetails = calculateExcitementDetails(heartRateData as TelemetryData[] || [], assignments)
 
     participantResults[participantId] = {
       excitementRanking,
@@ -130,7 +174,7 @@ async function generateResultsFromTelemetry(supabase: any, eventId: string) {
   return participantResults
 }
 
-async function generateHeartRateRanking(supabase: any, eventId: string, assignments: any[], currentParticipantId: string) {
+async function generateHeartRateRanking(supabase: SupabaseClient, eventId: string, assignments: Assignment[], currentParticipantId: string) {
   const participantScores = []
 
   for (const assignment of assignments) {
@@ -143,7 +187,7 @@ async function generateHeartRateRanking(supabase: any, eventId: string, assignme
       .eq('device_id', assignment.device_id)
       .not('heart_rate_bpm', 'is', null)
 
-    const avgHeartRate = heartRateData?.length > 0 
+    const avgHeartRate = heartRateData && heartRateData.length > 0 
       ? heartRateData.reduce((sum: number, d: any) => sum + d.heart_rate_bpm, 0) / heartRateData.length
       : 0
 
@@ -155,7 +199,7 @@ async function generateHeartRateRanking(supabase: any, eventId: string, assignme
     .map(p => p.participantId)
 }
 
-async function generateProximityRanking(supabase: any, eventId: string, assignments: any[], currentParticipantId: string) {
+async function generateProximityRanking(supabase: SupabaseClient, eventId: string, assignments: Assignment[], currentParticipantId: string) {
   const participantScores = []
 
   for (const assignment of assignments) {
@@ -167,7 +211,7 @@ async function generateProximityRanking(supabase: any, eventId: string, assignme
       .eq('event_id', eventId)
       .eq('device_id', assignment.device_id)
 
-    const avgDistance = proximityData?.length > 0
+    const avgDistance = proximityData && proximityData.length > 0
       ? proximityData.reduce((sum: number, d: any) => sum + d.distance_m, 0) / proximityData.length
       : 1000
 
@@ -179,7 +223,7 @@ async function generateProximityRanking(supabase: any, eventId: string, assignme
     .map(p => p.participantId)
 }
 
-async function generateExcitementRanking(supabase: any, eventId: string, assignments: any[], currentParticipantId: string) {
+async function generateExcitementRanking(supabase: SupabaseClient, eventId: string, assignments: Assignment[], currentParticipantId: string) {
   const participantScores = []
 
   for (const assignment of assignments) {
@@ -192,7 +236,7 @@ async function generateExcitementRanking(supabase: any, eventId: string, assignm
       .eq('device_id', assignment.device_id)
       .not('heart_rate_bpm', 'is', null)
 
-    const maxHeartRate = heartRateData?.length > 0
+    const maxHeartRate = heartRateData && heartRateData.length > 0
       ? Math.max(...heartRateData.map((d: any) => d.heart_rate_bpm))
       : 0
 
@@ -204,7 +248,7 @@ async function generateExcitementRanking(supabase: any, eventId: string, assignm
     .map(p => p.participantId)
 }
 
-function calculateHeartRateDetails(heartRateData: any[], proximityData: any[], assignments: any[]) {
+function calculateHeartRateDetails(heartRateData: TelemetryData[], proximityData: TelemetryData[], _assignments: Assignment[]) {
   if (!heartRateData || heartRateData.length === 0) {
     return {
       peakHeartRate: 0,
@@ -261,7 +305,7 @@ function calculateHeartRateDetails(heartRateData: any[], proximityData: any[], a
   }
 }
 
-function calculateProximityDetails(proximityData: any[], assignments: any[]) {
+function calculateProximityDetails(proximityData: TelemetryData[], _assignments: Assignment[]) {
   if (!proximityData || proximityData.length === 0) {
     return {}
   }
@@ -269,7 +313,7 @@ function calculateProximityDetails(proximityData: any[], assignments: any[]) {
   const details: Record<string, any> = {}
 
   // 各ピアデバイス（参加者）との近接詳細を計算
-  const peerGroups = proximityData.reduce((groups, d) => {
+  const peerGroups = proximityData.reduce((groups: any, d: any) => {
     if (!groups[d.peer_device_id]) {
       groups[d.peer_device_id] = []
     }
@@ -307,7 +351,7 @@ function calculateProximityDetails(proximityData: any[], assignments: any[]) {
   return details
 }
 
-function calculateExcitementDetails(heartRateData: any[], assignments: any[]) {
+function calculateExcitementDetails(heartRateData: TelemetryData[], assignments: Assignment[]) {
   if (!heartRateData || heartRateData.length === 0) {
     return {}
   }

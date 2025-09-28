@@ -1,7 +1,7 @@
 import { createServerSupabaseClient } from '@/lib/supabase'
 import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Heart, TrendingUp } from 'lucide-react'
+import { ArrowLeft, Heart } from 'lucide-react'
 import { ExcitementMainResult } from './excitement-main-result'
 import { ExcitementDetails } from './excitement-details'
 import { ExcitementAnalysis } from './excitement-analysis'
