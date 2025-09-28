@@ -1,5 +1,6 @@
 import { createServerSupabaseClient } from '@/lib/supabase'
 import { redirect } from 'next/navigation'
+import Link from 'next/link'
 
 export default async function AdminPage() {
   const supabase = await createServerSupabaseClient()
@@ -33,20 +34,20 @@ export default async function AdminPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <a href="/admin/events" className="bg-blue-50 p-4 rounded-lg hover:bg-blue-100 transition-colors">
+            <Link href="/admin/events" className="bg-blue-50 p-4 rounded-lg hover:bg-blue-100 transition-colors">
               <h3 className="font-semibold text-blue-900 mb-2">イベント管理</h3>
               <p className="text-sm text-blue-700">スポーツイベントの作成・編集・管理</p>
-            </a>
+            </Link>
             
-            <a href="/admin/users" className="bg-green-50 p-4 rounded-lg hover:bg-green-100 transition-colors">
+            <Link href="/admin/users" className="bg-green-50 p-4 rounded-lg hover:bg-green-100 transition-colors">
               <h3 className="font-semibold text-green-900 mb-2">ユーザー管理</h3>
               <p className="text-sm text-green-700">参加者の情報管理</p>
-            </a>
+            </Link>
             
-            <a href="/admin/devices" className="bg-purple-50 p-4 rounded-lg hover:bg-purple-100 transition-colors">
+            <Link href="/admin/devices" className="bg-purple-50 p-4 rounded-lg hover:bg-purple-100 transition-colors">
               <h3 className="font-semibold text-purple-900 mb-2">デバイス管理</h3>
               <p className="text-sm text-purple-700">測定デバイスの管理・設定</p>
-            </a>
+            </Link>
           </div>
 
           <div className="mt-8">
