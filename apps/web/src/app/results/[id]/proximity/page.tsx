@@ -76,7 +76,10 @@ export default async function ProximityResultPage({ params }: ProximityResultPag
     .eq('id', id)
     .single()
 
+  console.log('Event query result:', { event, error, id })
+
   if (error || !event) {
+    console.log('Event not found, returning 404')
     notFound()
   }
 
@@ -88,7 +91,10 @@ export default async function ProximityResultPage({ params }: ProximityResultPag
     .eq('participant_id', session.user.id)
     .single()
 
+  console.log('Assignment query result:', { assignment, eventId: id, participantId: session.user.id })
+
   if (!assignment) {
+    console.log('Assignment not found, returning 404')
     notFound()
   }
 
@@ -99,15 +105,58 @@ export default async function ProximityResultPage({ params }: ProximityResultPag
     .eq('event_id', id)
     .single()
 
+  console.log('Results query result:', { resultsData, eventId: id })
+
   if (!resultsData) {
+    console.log('Results data not found, returning 404')
     notFound()
   }
 
   const results = resultsData.per_participant_json as ResultsData
   const userResults = results[session.user.id]
 
+  console.log('User results:', { userResults, userId: session.user.id, allResults: Object.keys(results) })
+
+  // ユーザーの結果がない場合は、メッセージを表示
   if (!userResults) {
-    notFound()
+    console.log('User results not found, showing no results message')
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="mb-8">
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 mb-4"
+            >
+              <ArrowLeft className="h-4 w-4 mr-1" />
+              ダッシュボードに戻る
+            </Link>
+            <div className="text-center">
+              <div className="mx-auto h-16 w-16 bg-gray-200 rounded-full flex items-center justify-center mb-4">
+                <Users className="h-8 w-8 text-gray-500" />
+              </div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">結果準備中</h1>
+              <p className="text-gray-600">あなたの近接度結果はまだ準備中です</p>
+              <div className="text-sm text-gray-500 mt-2">{event.name}</div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-lg p-8 text-center">
+            <div className="text-6xl mb-4">⏳</div>
+            <h2 className="text-xl font-bold text-gray-700 mb-4">結果を準備中です</h2>
+            <p className="text-gray-600 mb-6">
+              データの解析が完了次第、あなたの近接度結果をお届けします。<br/>
+              しばらくお待ちください。
+            </p>
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <p className="text-sm text-blue-800">
+                💡 結果の準備ができましたら、ダッシュボードからご確認いただけます
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   // 参加者の情報を取得
